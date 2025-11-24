@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:dashboard/common/common_ui.dart';
 import 'package:dashboard/common/common_widgets.dart';
 import 'package:dashboard/controller/bin_controller.dart';
+import 'package:dashboard/controller/container_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
 import 'package:dashboard/models/bin_model.dart';
+import 'package:dashboard/service/container_api_service.dart';
 import 'package:dashboard/utility/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:dashboard/service/bin_service.dart';
@@ -26,12 +28,29 @@ class _LoadedViewState extends State<LoadedView> {
   final homePageController = Get.find<HomePageController>(
     tag: 'homePageController',
   );
-
+  final containerController = Get.find<ContainerController>(
+    tag: 'containerController',
+  );
   BinModel? bin;
+
+  int? index;
+  load() async {
+    await ContainerService().getAllForklift();
+    index = containerController.containerList.indexWhere(
+      (c) => c.slamCoreId == homePageController.deviceId.value,
+    );
+    setState(() {});
+  }
 
   @override
   void initState() {
-    super.initState();
+    load();
+  }
+
+  String currentZone(index) {
+    if (index == null || index == -1) return "N/A";
+    final z = containerController.containerList[index].zoneCode;
+    return (z == null || z.isEmpty) ? "N/A" : z;
   }
 
   getAllBin() async {
@@ -233,7 +252,7 @@ class _LoadedViewState extends State<LoadedView> {
                                       ),
                                     ),
                                     Text(
-                                      'zone',
+                                      currentZone(index),
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w900,

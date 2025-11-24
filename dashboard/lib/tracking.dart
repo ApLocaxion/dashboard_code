@@ -843,15 +843,6 @@ class _ScanScreenState extends State<ScanScreen> {
                 onTap: () => widget.onNavigate(View.search),
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: PrimaryActionButton(
-                icon: Icons.menu_rounded,
-                label: 'OPTIONS',
-                color: Colors.white,
-                onTap: () => widget.onNavigate(View.options),
-              ),
-            ),
           ],
         ),
       ],

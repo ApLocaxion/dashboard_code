@@ -102,7 +102,7 @@ class _ScanPageState extends State<ScanPage> {
   void _handleLoad() {
     final binId = binController.scanedBin.value.trim();
     if (binId.isEmpty) {
-      CommonWidgets().errorSnackbar("Error", 'Enter bin Id');
+      CommonWidgets().errorSnackbar("ERROR", 'ENTER BIN ID');
       return;
     }
 
@@ -249,6 +249,7 @@ class _ScanPageState extends State<ScanPage> {
                     color: const Color(0xFFE53935),
                     onTap: () {
                       Navigator.pop(context);
+                      _controller.clear();
                     },
                   ),
                 ),
@@ -287,6 +288,7 @@ class _ScanPageState extends State<ScanPage> {
     index = containerController.containerList.indexWhere(
       (c) => c.slamCoreId == homePageController.deviceId.value,
     );
+    setState(() {});
   }
 
   @override
@@ -331,6 +333,15 @@ class _ScanPageState extends State<ScanPage> {
                   children: [
                     Row(
                       children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            homePageController.scan.value =
+                                !homePageController.scan.value;
+                          },
+                          child: Text(
+                            homePageController.scan.value ? "Stop" : "Scan",
+                          ),
+                        ),
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -504,30 +515,34 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ),
             if (!_showVirtualKeyboard)
+              // BOTTOM BUTTONS
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // 🔥 radius here
-                    ),
-                    backgroundColor: Colors.blue,
-                  ),
-                  onPressed: () {
-                    //
-                    _handleLoad();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Load',
-                      style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.height / 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CommonUi().primaryActionButton(
+                        context: context,
+                        icon: Icons.keyboard_rounded,
+                        label: 'MANUAL ENTRY',
+                        color: Theme.of(context).colorScheme.primary,
+                        onTap: () {
+                          // Focus TextField -> triggers OS keyboard on tablets
+                          _showVirtualKeyboard = true;
+                        },
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: CommonUi().primaryActionButton(
+                        context: context,
+                        icon: Icons.search_rounded,
+                        label: 'SEARCH BINS',
+                        color: Colors.white,
+                        onTap: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

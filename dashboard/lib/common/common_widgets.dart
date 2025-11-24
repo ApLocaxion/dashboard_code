@@ -45,12 +45,36 @@ class CommonWidgets {
   SnackbarController errorSnackbar(String title, String message) {
     return Get.snackbar(
       title,
+      titleText: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      messageText: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       message,
       // backgroundColor: const Color(0xff43b5e3),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.red,
       borderWidth: 1.5,
-      borderColor: const Color(0xff43b5e3),
-      colorText: Colors.red,
+      // borderColor: const Color(0xff43b5e3),
+      colorText: Colors.white,
       // margin: const EdgeInsets.all(30.0),
       borderRadius: 10.0,
       duration: const Duration(milliseconds: 1500),

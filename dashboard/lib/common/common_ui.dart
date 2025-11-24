@@ -7,7 +7,7 @@ class CommonUi {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(color: Colors.white24),
       ),
       child: Row(
@@ -115,19 +115,29 @@ class CommonUi {
             ),
           ),
 
-          // Center spacer
-          const Spacer(),
+          const SizedBox(width: 20),
+          Text(
+            'ScrapView™',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 100),
 
           // Right: Status pills + battery
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               rowIcon(
+                // context: context,
                 icon: Icons.wifi_rounded,
                 label: wifiOnline ? 'On-Line' : 'Offline',
               ),
               const SizedBox(width: 8),
               rowIcon(
+                // context: context,
                 icon: Icons.signal_cellular_alt_rounded,
                 label: rtlsActive ? 'RTLS Active' : 'RTLS Down',
               ),
@@ -189,7 +199,7 @@ class CommonUi {
       padding: padding,
       decoration: BoxDecoration(
         color: colors.surface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(color: colors.tertiary, width: 2),
         boxShadow: const [
           BoxShadow(
