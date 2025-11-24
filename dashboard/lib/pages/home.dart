@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.toNamed("/areview");
+                Get.toNamed("/areaView");
               },
               child: Text("Area -grid"),
             ),

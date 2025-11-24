@@ -115,7 +115,7 @@ app.get("/api/all_positions", async (req, res) => {
  * GET /api/simulate → start simulating slamCore data for given points
  */
 app.post("/api/simulate", async (req, res) => {
-  const { points, deviceId = "slam-device-001" } = req.body;
+  const { points, deviceId = "FORKLIFT-001" } = req.body;
 
   if (!points || points.length < 2) {
     return res.status(400).json({ error: "no points" });

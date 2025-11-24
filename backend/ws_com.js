@@ -371,7 +371,7 @@ function startSocket() {
 
     try {
       if (data.pose) {
-        const deviceId = data.slamCoreId || "slam-device-001";
+        const deviceId = data.slamCoreId || "FORKLIFT-001";
         const pose = data.pose;
         // validatePose(pose);
 
@@ -422,7 +422,7 @@ async function init(externalDB) {
   await connectDB(externalDB);
   // Start WS publisher for frontend clients
   publisher.start();
-  startSocket();
+  // startSocket();
   console.log("System ready to receive pose data from device");
 }
 

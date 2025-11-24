@@ -42,7 +42,7 @@ class BinService {
   loadBin(
     String binId,
     String status, {
-    String deviceId = "slam-device-001",
+    String deviceId = "FORKLIFT-001",
   }) async {
     try {
       // bin id khali mt chod

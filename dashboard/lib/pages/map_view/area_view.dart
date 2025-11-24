@@ -87,7 +87,6 @@ class _AreaMapViewState extends State<AreaMapView> {
           },
           child: Stack(
             children: [
-              searchButton(context),
               Positioned.fill(
                 child: GridLayer(
                   cfg: cfg,

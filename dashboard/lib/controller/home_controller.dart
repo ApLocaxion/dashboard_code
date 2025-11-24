@@ -9,7 +9,7 @@ class HomePageController extends GetxController {
   final recordPoints = false.obs;
 
   final RxString simulateDeviceId = "".obs;
-  final RxString deviceId = "slam-device-001".obs;
+  final RxString deviceId = "FORKLIFT-001".obs;
   // final RxString deviceId = "FORKLIFT-001".obs;
 
   change() {

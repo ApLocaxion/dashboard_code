@@ -352,53 +352,54 @@ class _ScanPageState extends State<ScanPage> {
                               focusNode: FocusNode(),
                               autofocus: true,
                               onKeyEvent: (event) {
-                                _focusNode.requestFocus();
                                 if (homePageController.scan.value) {
-                                  if (event.logicalKey.keyLabel ==
-                                      "Backspace") {
-                                    if (_controller.text.isNotEmpty) {
-                                      final newText = _controller.text
-                                          .substring(
-                                            0,
-                                            _controller.text.length - 1,
-                                          );
-
-                                      _controller.value = TextEditingValue(
-                                        text: newText,
-                                        selection: TextSelection.collapsed(
-                                          offset: newText.length,
-                                        ),
-                                      );
-
-                                      binController.scanedBin.value = newText;
-                                    }
-                                    return;
-                                  }
-                                  if (event.character != null) {
-                                    final char = event.character!.toUpperCase();
-
-                                    /// only if its diff
-                                    if (event.logicalKey.keyLabel == 'Enter') {
-                                      _handleLoad();
-                                      return;
-                                    }
-                                    final newText = _controller.text + char;
-                                    binController.scanedBin.value = newText;
-                                    _controller.value = _controller.value
-                                        .copyWith(
-                                          text: newText,
-                                          selection: TextSelection.collapsed(
-                                            offset: newText.length,
-                                          ),
-                                        );
-                                  }
+                                  _focusNode.requestFocus();
                                 }
+                                // if (homePageController.scan.value) {
+                                //   if (event.logicalKey.keyLabel ==
+                                //       "Backspace") {
+                                //     if (_controller.text.isNotEmpty) {
+                                //       final newText = _controller.text
+                                //           .substring(
+                                //             0,
+                                //             _controller.text.length - 1,
+                                //           );
+
+                                //       _controller.value = TextEditingValue(
+                                //         text: newText,
+                                //         selection: TextSelection.collapsed(
+                                //           offset: newText.length,
+                                //         ),
+                                //       );
+
+                                //       binController.scanedBin.value = newText;
+                                //     }
+                                //     return;
+                                //   }
+                                //   if (event.character != null) {
+                                //     final char = event.character!.toUpperCase();
+
+                                //     /// only if its diff
+                                //     if (event.logicalKey.keyLabel == 'Enter') {
+                                //       _handleLoad();
+                                //       return;
+                                //     }
+                                //     final newText = _controller.text + char;
+                                //     binController.scanedBin.value = newText;
+                                //     _controller.value = _controller.value
+                                //         .copyWith(
+                                //           text: newText,
+                                //           selection: TextSelection.collapsed(
+                                //             offset: newText.length,
+                                //           ),
+                                //         );
+                                //   }
+                                // }
                               },
                               child: TextFormField(
                                 controller: _controller,
                                 focusNode: _focusNode,
                                 textAlign: TextAlign.center,
-                                readOnly: homePageController.scan.value,
                                 textInputAction: TextInputAction.done,
                                 onChanged: (value) {
                                   if (!homePageController.scan.value) {
@@ -539,7 +540,9 @@ class _ScanPageState extends State<ScanPage> {
                         icon: Icons.search_rounded,
                         label: 'SEARCH BINS',
                         color: Colors.white,
-                        onTap: () {},
+                        onTap: () {
+                          Get.toNamed('/searchScreen');
+                        },
                       ),
                     ),
                   ],

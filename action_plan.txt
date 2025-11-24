@@ -26,6 +26,13 @@ UI update
 
 Client Map ( sync map from slamCore ) 
 
+--
+auto adjust zone code text 
+
+scan 
+ auto cursor when input come
+ when scanning new qr ,  bin should update, 
+
 
 low priority : 
 
