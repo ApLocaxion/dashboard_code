@@ -422,7 +422,7 @@ async function init(externalDB) {
   await connectDB(externalDB);
   // Start WS publisher for frontend clients
   publisher.start();
-  // startSocket();
+  startSocket();
   console.log("System ready to receive pose data from device");
 }
 
