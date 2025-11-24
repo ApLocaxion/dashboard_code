@@ -1,5 +1,6 @@
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
+import 'package:dashboard/controller/map_controller.dart';
 import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:dashboard/pages/map_view/forklift_layer.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
@@ -7,14 +8,12 @@ import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:dashboard/pages/map_view/search/markerLayer.dart';
 import 'package:dashboard/pages/map_view/search/search.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
+import 'package:dashboard/pages/scan/search/image_layer.dart';
 import 'package:dashboard/service/container_api_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:get/get.dart';
-
-double zoom = 10;
-Offset panPx = const Offset(0, 0);
 
 class SearchMapView extends StatefulWidget {
   const SearchMapView({super.key});
@@ -32,18 +31,18 @@ class _SearchMapViewState extends State<SearchMapView> {
   final containerController = Get.find<ContainerController>(
     tag: 'containerController',
   );
+  final mapController = Get.find<MapController>(tag: 'mapController');
   final binController = Get.find<BinController>(tag: 'binController');
 
   double _startZoom = 10.0;
-  Offset _startPanPx = Offset.zero;
   Offset _startFocal = Offset.zero;
   Offset _worldAtFocalStart = Offset.zero;
 
-  double get _scalePxPerMeter => cfg.pxPerMeter * zoom;
+  double get _scalePxPerMeter => cfg.pxPerMeter * mapController.zoom.value;
 
   // Screen -> World (meters)
   Offset _screenToWorld(Offset screen) {
-    return (screen - panPx) / _scalePxPerMeter;
+    return (screen - mapController.panPx.value) / _scalePxPerMeter;
   }
 
   final webSocketController = Get.find<WebSocketController>(
@@ -57,20 +56,20 @@ class _SearchMapViewState extends State<SearchMapView> {
         if (event is PointerScrollEvent) {
           const step = 0.12;
           final zoomDelta = event.scrollDelta.dy < 0 ? (1 + step) : (1 - step);
-          final newZoom = (zoom * zoomDelta).clamp(5.0, 500.0);
+          final newZoom = (mapController.zoom.value * zoomDelta).clamp(
+            5.0,
+            500.0,
+          );
           final worldAtFocal = _screenToWorld(event.position);
           final newScale = cfg.pxPerMeter * newZoom;
           final newPan = event.position - worldAtFocal * newScale;
-          setState(() {
-            zoom = newZoom;
-            panPx = newPan;
-          });
+          mapController.zoom.value = newZoom;
+          mapController.panPx.value = newPan;
         }
       },
       child: GestureDetector(
         onScaleStart: (details) {
-          _startZoom = zoom;
-          _startPanPx = panPx;
+          _startZoom = mapController.zoom.value;
           _startFocal = details.focalPoint;
           _worldAtFocalStart = _screenToWorld(_startFocal);
         },
@@ -79,22 +78,38 @@ class _SearchMapViewState extends State<SearchMapView> {
           final newScalePxPerMeter = cfg.pxPerMeter * newZoom;
           final targetPan =
               details.focalPoint - _worldAtFocalStart * newScalePxPerMeter;
-          setState(() {
-            panPx = targetPan;
-          });
+          mapController.panPx.value = targetPan;
         },
         child: Stack(
           children: [
             Positioned.fill(
-              child: GridLayer(
-                cfg: cfg,
-                zoom: zoom,
-                panPx: panPx,
-                minorStepM: 1,
-                majorStepM: 10,
-                showLabels: true,
-              ),
+              child: Obx(() {
+                return GridLayer(
+                  cfg: cfg,
+                  zoom: mapController.zoom.value,
+                  panPx: mapController.panPx.value,
+                  minorStepM: 1,
+                  majorStepM: 10,
+                  showLabels: true,
+                );
+              }),
             ),
+            Positioned.fill(
+              child: Obx(() {
+                return ImageLayer(
+                  cfg: cfg,
+                  zoom: mapController.zoom.value,
+                  panPx: mapController.panPx.value,
+                );
+              }),
+            ),
+            Obx(() {
+              return ZoneLayer(
+                cfg: cfg,
+                zoom: mapController.zoom.value,
+                panPx: mapController.panPx.value,
+              );
+            }),
             Positioned.fill(
               child: Obx(() {
                 // Touch RxLists inside Obx to register dependencies
@@ -102,14 +117,13 @@ class _SearchMapViewState extends State<SearchMapView> {
                 final containers = containerController.containerList.toList();
                 return MarkerLayer(
                   cfg: cfg,
-                  zoom: zoom,
+                  zoom: mapController.zoom.value,
                   bins: bins,
-                  panPx: panPx,
+                  panPx: mapController.panPx.value,
                   containers: containers,
                 );
               }),
             ),
-            ZoneLayer(cfg: cfg, zoom: zoom, panPx: panPx),
           ],
         ),
       ),

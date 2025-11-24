@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 double zoom = 10;
-Offset panPx = const Offset(0, 0);
+Offset panPx = const Offset(-700, -1200);
 
 class SimulateView extends StatefulWidget {
   const SimulateView({super.key});

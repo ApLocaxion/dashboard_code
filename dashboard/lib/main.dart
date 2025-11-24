@@ -2,6 +2,7 @@ import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
 import 'package:dashboard/controller/dashboard_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
+import 'package:dashboard/controller/map_controller.dart';
 import 'package:dashboard/controller/search_controller.dart';
 import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:dashboard/controller/zone_controller.dart';
@@ -24,6 +25,7 @@ void main() {
   // Put your GetX controllers
   Get.put(HomePageController(), tag: 'homePageController');
   Get.put(WebSocketController(), tag: 'webSocketController');
+  Get.put(MapController(), tag: 'mapController');
   Get.put(ContainerController(), tag: 'containerController');
   Get.put(ZoneController(), tag: 'zoneController');
   Get.put(SearchControllerQuery(), tag: 'searchController');

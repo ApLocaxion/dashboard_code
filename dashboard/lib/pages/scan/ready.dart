@@ -124,41 +124,48 @@ class _ScanScreenState extends State<ScanScreen> {
                       thickness: 2,
                       color: Color(0xFFE5E7EB),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'CURRENT ZONE',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: colors.onSurfaceVariant,
-                            letterSpacing: 1.6,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-
-                              color: colors.primary,
-                              size: 26,
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'CURRENT ZONE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: colors.onSurfaceVariant,
+                              letterSpacing: 1.6,
                             ),
-                            const SizedBox(width: 6),
-                            Text(
-                              widget.currentZone,
-                              style: TextStyle(
-                                fontSize: size.height / 18,
-                                fontWeight: FontWeight.w900,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.location_on,
 
                                 color: colors.primary,
+                                size: 26,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(width: 6),
+                              Flexible(
+                                child: Text(
+                                  widget.currentZone,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: size.height / 18,
+                                    fontWeight: FontWeight.w900,
+
+                                    color: colors.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

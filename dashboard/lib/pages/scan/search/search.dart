@@ -1,6 +1,7 @@
 import 'package:dashboard/common/common_ui.dart';
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
+import 'package:dashboard/controller/map_controller.dart';
 import 'package:dashboard/models/bin_model.dart';
 import 'package:dashboard/pages/map_view/search/searchMapView.dart';
 import 'package:flutter/material.dart';
@@ -16,24 +17,37 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String query = '';
-  BinModel? selected;
 
   final binController = Get.find<BinController>(tag: 'binController');
   final homePageController = Get.find<HomePageController>(
     tag: 'homePageController',
   );
+  final mapController = Get.find<MapController>(tag: 'mapController');
+
+  double get _originX => -150;
+  double get _originY => -150;
+  double get _worldHm => 150 + 2 * 150;
+
+  Offset _toScreen(double xm, double ym) {
+    final xPx =
+        (xm - _originX) * mapController.zoom.value +
+        mapController.panPx.value.dx;
+    final yImg = (ym - _originY) * mapController.zoom.value;
+    final heightPx = _worldHm * mapController.zoom.value;
+    final yPx = (heightPx - yImg) + mapController.panPx.value.dy; // flip Y
+    return Offset(xPx, yPx);
+  }
+
+  Offset _screenToWorld(Offset screen) {
+    return (screen - mapController.panPx.value) / mapController.zoom.value;
+  }
+
+  final mapKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final filtered = binController.allBin.where((b) {
-      if (query.isEmpty) return true;
-      // final q = query.toUpperCase();
-      return b.binId.contains(query);
-
-      /// with alloys
-      ///  || b.alloy.toUpperCase().contains(q);
-    }).toList();
+    // final filteredLOO
 
     return Scaffold(
       body: Column(
@@ -54,8 +68,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          ///
-                          ///Get
                           Get.back();
                         },
                         icon: const Icon(Icons.arrow_back_rounded),
@@ -107,161 +119,91 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 24),
                   Expanded(
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Left list
-                        SizedBox(
-                          width: 260,
-                          child: ListView.separated(
-                            itemCount: filtered.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 10),
-                            itemBuilder: (context, index) {
-                              final bin = filtered[index];
-                              final isSelected = selected?.binId == bin.binId;
-                              return GestureDetector(
-                                onTap: () => setState(() => selected = bin),
-                                child: CommonUi().appCard(
-                                  context: context,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 18,
-                                    vertical: 14,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              bin.binId,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w900,
-                                                color: isSelected
-                                                    ? colors.primary
-                                                    : colors.onSurfaceVariant,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              "bin.alloy",
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w600,
-                                                color: colors.onSurfaceVariant,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'WEIGHT',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w900,
-                                              color: colors.onSurfaceVariant,
-                                              letterSpacing: 1.5,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            "bin.weight",
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w700,
-                                              color: colors.onSurface,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        // Right details + map
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE5E7F0),
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: colors.tertiary),
-                            ),
-                            height: MediaQuery.of(context).size.height / 1.5,
-                            child: selected == null
-                                ? SearchMapView()
-                                : Column(
-                                    children: [
-                                      CommonUi().appCard(
-                                        context: context,
-                                        padding: const EdgeInsets.all(20),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              selected!.binId,
-                                              style: TextStyle(
-                                                fontSize: 32,
-                                                fontWeight: FontWeight.w900,
-                                                color: colors.primary,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            _detailRow(
-                                              'Grade',
-                                              "selected!.alloy",
-                                              colors,
-                                            ),
-                                            const Divider(),
-                                            _detailRow(
-                                              'Weight',
-                                              selected!.weight.toString(),
-                                              colors,
-                                            ),
-                                            const Divider(),
-                                            _detailRow(
-                                              'Location',
-                                              selected!.zoneCode == null
-                                                  ? " zoneCore"
-                                                  : "NA",
-                                              colors,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Expanded(
-                                        child: CommonUi().appCard(
-                                          context: context,
-                                          padding: const EdgeInsets.all(20),
+                        Obx(() {
+                          final filtered = binController.allBin
+                              .where(
+                                (b) => query.isEmpty || b.binId.contains(query),
+                              )
+                              .toList();
+                          final _ = binController.selectedBin.value;
+                          return SizedBox(
+                            width: MediaQuery.of(context).size.width / 4,
+                            child: ListView.separated(
+                              itemCount: filtered.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 10),
+                              itemBuilder: (context, index) {
+                                BinModel bin = filtered[index];
+                                final isSelected =
+                                    binController.selectedBin.value?.binId ==
+                                    bin.binId;
+                                return GestureDetector(
+                                  onTap: () {
+                                    final box =
+                                        mapKey.currentContext
+                                                ?.findRenderObject()
+                                            as RenderBox?;
+                                    if (box == null) return;
+                                    final size = box.size;
+                                    final center = size.center(Offset.zero);
+                                    mapController.zoom.value = 15;
+
+                                    // reuse the same transform as SearchMapView/MarkerLayer
+                                    Offset toScreen(double xm, double ym) {
+                                      const origin =
+                                          -20.0; // MapConfig.marginMetersb
+                                      final z = mapController.zoom.value;
+                                      final xPx =
+                                          (xm - origin) * z +
+                                          mapController.panPx.value.dx;
+                                      final yImg = (ym - origin) * z;
+                                      final heightPx =
+                                          (150 + 2 * 20) *
+                                          z; // width/height + margins
+                                      final yPx =
+                                          (heightPx - yImg) +
+                                          mapController.panPx.value.dy;
+                                      return Offset(xPx, yPx);
+                                    }
+
+                                    final markerPx = toScreen(bin.x, bin.y);
+                                    mapController.panPx.value +=
+                                        center - markerPx;
+
+                                    binController.selectedBin.value = bin;
+                                  },
+                                  child: CommonUi().appCard(
+                                    context: context,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 18,
+                                      vertical: 14,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Icon(
-                                                Icons.public_rounded,
-                                                size: 60,
-                                                color: colors.onSurfaceVariant,
-                                              ),
-                                              SizedBox(height: 10),
                                               Text(
-                                                'No Zone Data Available',
+                                                bin.binId,
                                                 style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w900,
+                                                  color: isSelected
+                                                      ? colors.primary
+                                                      : colors.onSurfaceVariant,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                "bin.alloy",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
                                                   color:
                                                       colors.onSurfaceVariant,
                                                 ),
@@ -269,37 +211,65 @@ class _SearchScreenState extends State<SearchScreen> {
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: colors.primary,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 16,
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              'WEIGHT',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w900,
+                                                color: colors.onSurfaceVariant,
+                                                letterSpacing: 1.5,
+                                              ),
                                             ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(18),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              "bin.weight",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w700,
+                                                color: colors.onSurface,
+                                              ),
                                             ),
-                                          ),
-                                          onPressed: () {
-                                            ///
-                                            selected;
-                                          },
-                                          child: const Text(
-                                            'LOAD THIS BIN',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.white,
-                                            ),
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
+                                );
+                              },
+                            ),
+                          );
+                        }),
+                        const SizedBox(width: 24),
+                        // Right details + map
+                        Expanded(
+                          child: Container(
+                            key: mapKey,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE5E7F0),
+                              borderRadius: BorderRadius.circular(28),
+                              border: Border.all(color: colors.tertiary),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    214,
+                                    214,
+                                    214,
+                                  ),
+                                  blurRadius: 12, // how soft
+                                  spreadRadius: 2, // how wide
+                                  offset: const Offset(0, 4), // shadow position
+                                ),
+                              ],
+                            ),
+                            height: MediaQuery.of(context).size.height / 1.5,
+                            child: SearchMapView(),
                           ),
                         ),
                       ],
@@ -307,33 +277,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _detailRow(String label, String value, ColorScheme colors) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: colors.onSurfaceVariant,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: colors.onSurface,
             ),
           ),
         ],

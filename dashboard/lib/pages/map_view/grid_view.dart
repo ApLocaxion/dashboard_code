@@ -1,9 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
-import 'package:dashboard/controller/zone_controller.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class GridLayer extends StatelessWidget {
   final MapConfig cfg;
@@ -64,10 +62,6 @@ class _GridPainter extends CustomPainter {
 
   // Pixels per meter at current zoom
   double get scale => cfg.pxPerMeter * zoom;
-
-  // World (m) -> Screen (px)
-  double worldXToScreen(double xm) => (xm * scale) + panPx.dx;
-  double worldYToScreen(double ym) => (ym * scale) + panPx.dy;
 
   // For crisp 1px strokes
   double _pixelSnap(double v) => (v.floorToDouble()) + 0.5;

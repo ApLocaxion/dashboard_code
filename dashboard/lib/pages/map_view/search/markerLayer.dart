@@ -1,3 +1,5 @@
+import 'package:dashboard/common/common_ui.dart';
+import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
 import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:flutter/material.dart';
@@ -79,52 +81,30 @@ class _MarkerLayerState extends State<MarkerLayer> {
     tag: 'webSocketController',
   );
 
+  final binController = Get.find<BinController>(tag: 'binController');
+
   BinModel? _selectedBin;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent, // IMPORTANT
+      onTapDown: (_) {
+        setState(() {
+          _selectedBin = null; // Reset on any tap
+        });
+      },
+      onTap: () {
+        setState(() {
+          _selectedBin = null;
+        });
+      },
       child: LayoutBuilder(
         builder: (ctx, constraints) {
           final vis = _visibleWorld(
             Size(constraints.maxWidth, constraints.maxHeight),
           );
           final children = <Widget>[];
-
-          // Anchor image at world (0,0) with bottom-left alignment,
-          // moving with pan/zoom like forklifts.
-          final originPoint = Offset(0, 0);
-
-          final p0 = _toScreen(originPoint.dx, originPoint.dy);
-          final imgSize = 140.0 * widget.zoom;
-          children.add(
-            Positioned(
-              left: p0.dx,
-              top: p0.dy - imgSize, // bottom-left of image at (0,0)
-              width: imgSize,
-              height: imgSize,
-              child: const IgnorePointer(
-                child: Image(
-                  // image: AssetImage('assets/rt.png'),
-                  // image: AssetImage('assets/rb.jpg'),
-                  image: AssetImage('assets/map.jpg'),
-                  opacity: AlwaysStoppedAnimation(1),
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.low,
-                ),
-              ),
-            ),
-          );
-
-          // containers.add(
-          //   ContainerStateEventApiDTO(
-          //     lastModified: "2025-09-24T12:10:36.097182Z",
-          //     slamCoreId: "1",
-          //     x: 0.0,
-          //     y: 10.0,
-          //     z: 0.0,
-          //   ),
-          // );
 
           // Forklifts (containers)
           for (final c in widget.containers) {
@@ -205,6 +185,9 @@ class _MarkerLayerState extends State<MarkerLayer> {
             }
             if (!vis.contains(Offset(x, y))) continue;
 
+            final isSelected =
+                binController.selectedBin.value?.binId == b.binId;
+
             final p = _toScreen(x, y);
             final sizePx = widget.screenFixedSize
                 ? widget.iconSize
@@ -214,84 +197,62 @@ class _MarkerLayerState extends State<MarkerLayer> {
               final b = _selectedBin!;
               children.add(
                 Positioned(
-                  right: 50,
-                  top: 50,
-                  child: Material(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      width: 200,
+                  right: 20,
+                  top: 10,
+                  child: SizedBox(
+                    width: 200,
+                    child: CommonUi().appCard(
+                      context: context,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 19, 90, 148),
-                            ),
-                            width: double.infinity,
-                            alignment: Alignment.center,
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                // you can use b.binId here
-                                'Bin details',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 26,
-                                ),
-                              ),
+                          Text(
+                            "BIN DETAILS",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              b.zoneCode != null
-                                  ? "Location : ${b.zoneCode}"
-                                  : "Location : NA",
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 20,
-                              ),
-                            ),
+                          const Divider(),
+                          CommonUi().detailRow(
+                            "Location :",
+                            b.zoneCode != null
+                                ? "${b.zoneCode}"
+                                : "N/AN/AN/AN/AN/AN/AN/A",
+                            Theme.of(context).colorScheme,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: Text(
-                              'Forklift : ${b.forkliftId}',
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 15,
-                              ),
-                            ),
+                          CommonUi().horizontalDivider(height: 6),
+                          CommonUi().detailRow(
+                            "Forklift :",
+                            '${b.forkliftId}',
+                            Theme.of(context).colorScheme,
                           ),
-                          const SizedBox(height: 20),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              'Weight : NA',
-                              style: TextStyle(color: Colors.red, fontSize: 15),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Container(
-                            color: Colors.red,
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'MixGrade  : g1,g2,g4',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          CommonUi().horizontalDivider(height: 6),
+                          CommonUi().detailRow(
+                            "Weight :",
+                            'N/A',
+                            Theme.of(context).colorScheme,
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            if (isSelected) {
+              final highlightSize = sizePx * 2.5;
+              children.add(
+                Positioned(
+                  left: p.dx - highlightSize / 2 + 10,
+                  top: p.dy - highlightSize / 2 + 10,
+                  width: highlightSize,
+                  height: highlightSize,
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.red, width: 3),
                       ),
                     ),
                   ),
@@ -311,6 +272,7 @@ class _MarkerLayerState extends State<MarkerLayer> {
                     color: b.status == 'load' ? Colors.blue : Colors.grey,
                   ),
                   onPressed: () {
+                    binController.selectedBin.value = b;
                     setState(() {
                       _selectedBin = b;
                     });

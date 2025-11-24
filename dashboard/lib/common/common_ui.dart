@@ -27,6 +27,39 @@ class CommonUi {
     );
   }
 
+  Widget detailRow(String label, String value, ColorScheme colors) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: colors.onSurface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget columnIcon({
     required IconData icon,
     required BuildContext context,
@@ -352,8 +385,8 @@ class CommonUi {
     );
   }
 
-  Widget horizontalDivider() {
-    return Divider(height: 32, thickness: 1, color: Color(0xFFE5E7EB));
+  Widget horizontalDivider({double height = 32}) {
+    return Divider(height: height, thickness: 1, color: Color(0xFFE5E7EB));
   }
 
   Widget verticalDivider() {
