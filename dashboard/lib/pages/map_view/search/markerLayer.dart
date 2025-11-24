@@ -79,6 +79,8 @@ class _MarkerLayerState extends State<MarkerLayer> {
     tag: 'webSocketController',
   );
 
+  BinModel? _selectedBin;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -208,6 +210,95 @@ class _MarkerLayerState extends State<MarkerLayer> {
                 ? widget.iconSize
                 : widget.iconSize * widget.zoom;
 
+            if (_selectedBin != null) {
+              final b = _selectedBin!;
+              children.add(
+                Positioned(
+                  right: 50,
+                  top: 50,
+                  child: Material(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      width: 200,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 19, 90, 148),
+                            ),
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                // you can use b.binId here
+                                'Bin details',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 26,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              b.zoneCode != null
+                                  ? "Location : ${b.zoneCode}"
+                                  : "Location : NA",
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Text(
+                              'Forklift : ${b.forkliftId}',
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Weight : NA',
+                              style: TextStyle(color: Colors.red, fontSize: 15),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                            color: Colors.red,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text(
+                                  'MixGrade  : g1,g2,g4',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
             children.add(
               Positioned(
                 left: p.dx - sizePx / 2,
@@ -220,109 +311,9 @@ class _MarkerLayerState extends State<MarkerLayer> {
                     color: b.status == 'load' ? Colors.blue : Colors.grey,
                   ),
                   onPressed: () {
-                    children.add(
-                      Positioned(
-                        right: 50,
-                        top: 50,
-                        child: Material(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0), //
-                            ),
-                            width: 200,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      19,
-                                      90,
-                                      148,
-                                    ),
-                                  ),
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Bin id: ${b.binId}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    b.zoneCode != null
-                                        ? "Location : ${b.zoneCode}"
-                                        : "Location : NA",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: Text(
-                                    'Forklift : ${b.forkliftId}',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0,
-                                  ),
-                                  child: Text(
-                                    'Weight : NA',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Container(
-                                  color: Colors.red,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                    ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'MixGrade  : g1,g2,g4',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                //
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                    print(children.length);
-                    setState(() {});
+                    setState(() {
+                      _selectedBin = b;
+                    });
                   },
                 ),
               ),

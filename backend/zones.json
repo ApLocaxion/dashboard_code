@@ -39,6 +39,19 @@
     "zmin": -1.0
   },
   {
+    "zoneId": 9,
+    "code": "OUTER",
+    "hasChild": true,
+    "hasParent": false,
+    "chlidId": [4,5,6,7],
+    "active": true,
+    "title": "Slitter 8 and 12 Scrap Storage (North)",
+    "description": "Storage Area",
+    "boundary": "POLYGON ((68 49, 46 10, 76 2, 103 38, 68 49))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  },
+  {
     "zoneId": 7,
     "code": "comp",
     "hasChild": false,
