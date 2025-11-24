@@ -1,0 +1,35 @@
+Zone notification , multiple trigger 
+
+slam Core data via Ethernet 
+
+
+UI to bigger n color theme✅
+
+simulator with path drawing ✅
+
+Dashboard :
+
+bin id , current location(zone), enter time (time it entered in zone),forklift Id, dwell time (how long since entered), previous location(zone) , previous location exit time
+
+one more table : bin id, location, enter time , dwell time
+
+
+High priority :
+
+bin location should update on press on unload/load button ✅
+
+cursor show when data coming from scanner ✅ ( need to be tested )
+
+nested zones ✅
+
+UI update 
+
+Client Map ( sync map from slamCore ) 
+
+
+low priority : 
+
+bin should move
+bin id 
+
+

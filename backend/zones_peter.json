@@ -1,0 +1,23 @@
+[
+
+  {
+    "zoneId": 5,
+    "code": "SCRAP-UNWINDER",
+    "active": true,
+    "title": "Scrap unwinder",
+    "description": "Scrap Unwinder",
+    "boundary": "POLYGON ((9 1, 9 2, 10 2, 10 1, 9 1))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  },
+  {
+    "zoneId": 6,
+    "code": "SCRAP-STORAGE",
+    "active": true,
+    "title": "Slitter 8 and 12 Scrap Storage (North)",
+    "description": "Storage Area",
+    "boundary": "POLYGON ((4 1, 4 3, 5 3, 5 1, 4 1))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  }
+]

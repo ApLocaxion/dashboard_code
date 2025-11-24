@@ -1,0 +1,510 @@
+{
+    "content": [
+        {
+            "id": 1,
+            "createdAt": "2025-08-21T15:44:43.988797Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "MATERIAL_MIXING_A",
+            "title": "Material mixing detected",
+            "textContent": null
+        },
+        {
+            "id": 2,
+            "createdAt": "2025-08-22T07:22:32.369188Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "MATERIAL_MIXING_B",
+            "title": "Material mixing detected",
+            "textContent": null
+        },
+        {
+            "id": 3,
+            "createdAt": "2025-09-02T07:54:52.509778Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 4,
+            "createdAt": "2025-09-02T10:08:28.710528Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 5,
+            "createdAt": "2025-09-02T10:43:50.547336Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "NO_COIL_DETECTED",
+            "title": "No coil detected",
+            "textContent": null
+        },
+        {
+            "id": 6,
+            "createdAt": "2025-09-02T10:43:50.649150Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "BIN1: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        },
+        {
+            "id": 7,
+            "createdAt": "2025-09-02T10:43:50.659709Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "Slitter 1: BIN1: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        },
+        {
+            "id": 8,
+            "createdAt": "2025-09-02T11:26:17.556126Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 9,
+            "createdAt": "2025-09-02T11:56:23.268133Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 10,
+            "createdAt": "2025-09-02T11:57:56.146079Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 11,
+            "createdAt": "2025-09-02T11:57:56.164526Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Slitter 1: Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 12,
+            "createdAt": "2025-09-02T11:58:10.644280Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 13,
+            "createdAt": "2025-09-02T11:58:22.623991Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "NO_COIL_DETECTED",
+            "title": "No coil detected",
+            "textContent": null
+        },
+        {
+            "id": 14,
+            "createdAt": "2025-09-02T11:58:34.105023Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Slitter 1: Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 15,
+            "createdAt": "2025-09-02T11:58:34.104101Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 16,
+            "createdAt": "2025-09-07T18:28:21.073762Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 17,
+            "createdAt": "2025-09-07T18:28:31.392233Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 18,
+            "createdAt": "2025-09-07T18:30:34.824413Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 19,
+            "createdAt": "2025-09-08T06:55:19.510393Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 20,
+            "createdAt": "2025-09-08T06:55:48.174540Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 21,
+            "createdAt": "2025-09-08T11:17:19.662716Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "OVERLOADED_FORKLIFT",
+            "title": "Equipment 123",
+            "textContent": "Text content"
+        },
+        {
+            "id": 22,
+            "createdAt": "2025-09-12T12:07:40.999249Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "TEST",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 23,
+            "createdAt": "2025-09-12T12:07:52.054024Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "TEST",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 24,
+            "createdAt": "2025-09-12T12:07:58.657632Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "TEST",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 25,
+            "createdAt": "2025-09-15T08:29:22.211047Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "TEST_ALERT",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 26,
+            "createdAt": "2025-09-15T08:29:31.471755Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "TEST_ALERT",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 27,
+            "createdAt": "2025-09-15T08:29:35.927198Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "TEST_ALERT",
+            "title": "Test alert",
+            "textContent": "Test alert content"
+        },
+        {
+            "id": 28,
+            "createdAt": "2025-09-15T09:32:09.497679Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 29,
+            "createdAt": "2025-09-15T09:32:57.268806Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 30,
+            "createdAt": "2025-09-15T09:33:13.679168Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 31,
+            "createdAt": "2025-09-15T09:33:59.087290Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 32,
+            "createdAt": "2025-09-15T09:34:12.364269Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active",
+            "textContent": null
+        },
+        {
+            "id": 33,
+            "createdAt": "2025-09-18T09:26:32.326378Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Right)",
+            "textContent": null
+        },
+        {
+            "id": 34,
+            "createdAt": "2025-09-18T09:30:51.148377Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Left)",
+            "textContent": null
+        },
+        {
+            "id": 35,
+            "createdAt": "2025-09-18T09:37:29.503910Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Right)",
+            "textContent": null
+        },
+        {
+            "id": 36,
+            "createdAt": "2025-09-18T09:38:56.869615Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Left)",
+            "textContent": null
+        },
+        {
+            "id": 37,
+            "createdAt": "2025-09-18T09:57:24.975330Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Right)",
+            "textContent": null
+        },
+        {
+            "id": 38,
+            "createdAt": "2025-09-18T10:43:58.127103Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Slitter 1: Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 39,
+            "createdAt": "2025-09-18T10:43:58.148618Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 40,
+            "createdAt": "2025-09-18T10:44:45.055225Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Left)",
+            "textContent": null
+        },
+        {
+            "id": 41,
+            "createdAt": "2025-09-18T10:48:13.178165Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "NO_COIL_DETECTED",
+            "title": "No coil detected",
+            "textContent": null
+        },
+        {
+            "id": 42,
+            "createdAt": "2025-09-18T10:49:20.701611Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "NO_COIL_DETECTED",
+            "title": "No coil detected",
+            "textContent": null
+        },
+        {
+            "id": 43,
+            "createdAt": "2025-09-18T10:49:20.745274Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "Slitter 1: BIN1: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        },
+        {
+            "id": 44,
+            "createdAt": "2025-09-18T10:49:20.748781Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "BIN1: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        },
+        {
+            "id": 45,
+            "createdAt": "2025-09-18T11:38:07.352927Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "HOPPER_ACTIVE",
+            "title": "Slitter 1: Hopper Active (Right)",
+            "textContent": null
+        },
+        {
+            "id": 46,
+            "createdAt": "2025-09-18T11:38:07.985623Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 47,
+            "createdAt": "2025-09-18T11:38:08.020505Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "ERROR",
+            "type": "SCRAP_MIXING",
+            "title": "Slitter 1: Scrap Mixing Detected!!",
+            "textContent": null
+        },
+        {
+            "id": 48,
+            "createdAt": "2025-09-24T12:16:56.070451Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "INFO",
+            "type": "NO_COIL_DETECTED",
+            "title": "No coil detected",
+            "textContent": null
+        },
+        {
+            "id": 49,
+            "createdAt": "2025-09-24T12:16:56.314446Z",
+            "equipmentGroupCode": "SLITTER001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "BIN6: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        },
+        {
+            "id": 50,
+            "createdAt": "2025-09-24T12:16:56.321059Z",
+            "equipmentGroupCode": "F001",
+            "equipmentCode": null,
+            "severity": "WARNING",
+            "type": "MATERIAL_MIXING_WARNING",
+            "title": "Slitter 1: BIN6: Grade changed",
+            "textContent": "Replace Bin or Switch Hopper"
+        }
+    ],
+    "totalPages": 2,
+    "totalElements": 61,
+    "numberOfElements": 50,
+    "last": false,
+    "first": true,
+    "empty": false
+}

@@ -1,0 +1,22 @@
+login
+
+view map-dashboard
+    map image : 
+    grid view : live bin and forklift
+
+    map reset button  : set zoom and location
+
+    press on bin show pop up : bin details
+        - binId 
+        - Grade 
+        - weight 
+        - close  
+
+scan - page
+     enters bin id press load button : do you have to load yes/no
+
+     screen with bin id 
+        -   unLoad button > goes to map view
+
+           
+

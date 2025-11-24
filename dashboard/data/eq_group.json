@@ -1,0 +1,26 @@
+{
+    "content": [
+        {
+            "id": 1,
+            "code": "F001",
+            "active": true,
+            "title": "Forklift 1",
+            "description": "Forklift for the ForkSight pilot",
+            "type": "FORKLIFT"
+        },
+        {
+            "id": 2,
+            "code": "SLITTER001",
+            "active": true,
+            "title": "Slitter 1",
+            "description": "Slitter for the ForkSight pilot",
+            "type": "PRODUCTION_LINE"
+        }
+    ],
+    "totalPages": 1,
+    "totalElements": 2,
+    "numberOfElements": 2,
+    "last": true,
+    "first": true,
+    "empty": false
+}

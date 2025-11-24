@@ -1,0 +1,100 @@
+{
+    "content": [
+        {
+            "id": 1,
+            "equipmentGroupId": 1,
+            "code": "F001-LOAD",
+            "macAddress": null,
+            "active": true,
+            "title": "Forklift 1 - loaded/unloaded sensor",
+            "description": "Laser sensor to determine if something is loaded",
+            "type": "LENGTH_SENSOR"
+        },
+        {
+            "id": 2,
+            "equipmentGroupId": 1,
+            "code": "F001-LOAD-MANUAL",
+            "macAddress": null,
+            "active": true,
+            "title": "Forklift 1 - loaded/unloaded manual input",
+            "description": "Manual input to specify whether the forklift is loaded or unloaded",
+            "type": "EXTERNAL_BOOLEAN_INPUT"
+        },
+        {
+            "id": 3,
+            "equipmentGroupId": 1,
+            "code": "F001-CODE-READER",
+            "macAddress": null,
+            "active": true,
+            "title": "Forklift 1 - automatic code reader",
+            "description": "Automatic code reader to read the code of loaded items",
+            "type": "CODE_READER"
+        },
+        {
+            "id": 4,
+            "equipmentGroupId": 1,
+            "code": "F001-CODE-READER-MANUAL",
+            "macAddress": null,
+            "active": true,
+            "title": "Forklift 1 - manual code reader",
+            "description": "Manual code reader to read the code of loaded items",
+            "type": "EXTERNAL_STRING_INPUT"
+        },
+        {
+            "id": 6,
+            "equipmentGroupId": 2,
+            "code": "SLITTER001-LOT",
+            "macAddress": null,
+            "active": true,
+            "title": "Slitter 1 - #LOT number",
+            "description": "#LOT number input (OPC)",
+            "type": "EXTERNAL_STRING_INPUT"
+        },
+        {
+            "id": 7,
+            "equipmentGroupId": 2,
+            "code": "SLITTER001-HOPPER-LEFT",
+            "macAddress": null,
+            "active": true,
+            "title": "Slitter 1 - Hopper left position input (OPC)",
+            "description": "Hopper left position",
+            "type": "EXTERNAL_BOOLEAN_INPUT"
+        },
+        {
+            "id": 8,
+            "equipmentGroupId": 2,
+            "code": "SLITTER001-HOPPER-RIGHT",
+            "macAddress": null,
+            "active": true,
+            "title": "Slitter 1 - Hopper right position input (OPC)",
+            "description": "Hopper right position",
+            "type": "EXTERNAL_BOOLEAN_INPUT"
+        },
+        {
+            "id": 9,
+            "equipmentGroupId": 2,
+            "code": "SLITTER001-LOT-ALLOY",
+            "macAddress": null,
+            "active": true,
+            "title": "Slitter 1 - #LOT-Alloy",
+            "description": "AS400 connector input (CSV file reader) for #LOT-Alloy pairing",
+            "type": "EXTERNAL_STRING_PAIR_INPUT"
+        },
+        {
+            "id": 10,
+            "equipmentGroupId": 2,
+            "code": "S001",
+            "macAddress": null,
+            "active": true,
+            "title": "Slitter 1 - Scale",
+            "description": "Containers scale",
+            "type": "SCALE"
+        }
+    ],
+    "totalPages": 1,
+    "totalElements": 9,
+    "numberOfElements": 9,
+    "last": true,
+    "first": true,
+    "empty": false
+}

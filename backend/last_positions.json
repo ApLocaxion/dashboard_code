@@ -1,0 +1,13 @@
+[
+  {
+    "slamCoreId": "slam-device-001",
+    "pose": {
+      "x": 20.5,
+      "y": 25.1,
+      "z": 1.1,
+      "timestamp": "2025-11-20T14:19:31.545Z"
+    },
+    "updatedAt": "2025-11-20T14:19:31.545Z",
+    "zoneCode": null
+  }
+]
