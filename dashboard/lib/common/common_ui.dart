@@ -97,6 +97,7 @@ class CommonUi {
     required double battery,
   }) {
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size.width;
     return Container(
       color: colors.secondary,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
@@ -106,10 +107,10 @@ class CommonUi {
           Expanded(
             child: Row(
               children: [
-                const Text(
+                Text(
                   'LocaXion',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: size / 40,
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
                   ),
@@ -117,7 +118,7 @@ class CommonUi {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 12),
                   width: 2,
-                  height: 24,
+                  height: size / 40,
                   color: Colors.white24,
                 ),
                 Column(
@@ -126,7 +127,7 @@ class CommonUi {
                     Text(
                       'VEHICLE ID',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: size / 100,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFFB7CEFF),
                         letterSpacing: 1.8,
@@ -136,7 +137,7 @@ class CommonUi {
                     Text(
                       deviceId,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: size / 50,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                         letterSpacing: 0.6,
@@ -150,9 +151,9 @@ class CommonUi {
 
           const SizedBox(width: 20),
           Text(
-            'ScrapView™+2',
+            'ScrapView™',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: size / 44,
               fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
@@ -364,14 +365,14 @@ class CommonUi {
             children: [
               Icon(
                 icon,
-                size: 32,
+                size: size.width / 36,
                 color: color == Colors.white ? colors.primary : Colors.white,
               ),
               const SizedBox(width: 14),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: size.width / 40,
                   fontWeight: FontWeight.w800,
                   color: color == Colors.white
                       ? colors.onSurface
@@ -454,4 +455,49 @@ class CommonUi {
   Widget verticalDivider() {
     return VerticalDivider(width: 32, thickness: 2, color: Color(0xFFE5E7EB));
   }
+}
+
+class AppStyles {
+  static const BorderRadius radius24 = BorderRadius.all(Radius.circular(24));
+  static const BorderRadius radius16 = BorderRadius.all(Radius.circular(16));
+
+  static const List<BoxShadow> cardShadow = [
+    BoxShadow(
+      color: Color(0x0D000000),
+      blurRadius: 24,
+      offset: Offset(0, 8),
+      spreadRadius: 0,
+    ),
+  ];
+
+  static const TextStyle headerBrand = TextStyle(
+    fontFamily: 'Arial',
+    fontSize: 24,
+    fontWeight: FontWeight.w900,
+    letterSpacing: -0.5,
+    color: Colors.white,
+  );
+
+  static const TextStyle headerLabel = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 0.5,
+    color: Color(0xFF8E8E93),
+  );
+
+  static const TextStyle metricLabel = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w900,
+    letterSpacing: 0.8,
+    color: Color(0xFF86868B),
+  );
+
+  static const TextStyle metricValue = TextStyle(
+    fontFamily: 'Arial',
+    fontSize: 36,
+    fontWeight: FontWeight.w900,
+    color: Colors.blue,
+    letterSpacing: -1.5,
+    height: 1.0,
+  );
 }

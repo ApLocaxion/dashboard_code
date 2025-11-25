@@ -48,6 +48,15 @@ class _HomeState extends State<Home> {
               child: Text("Dashboard"),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Get.toNamed("/table");
+              },
+              child: Text("table"),
+            ),
+          ),
         ],
       ),
     );

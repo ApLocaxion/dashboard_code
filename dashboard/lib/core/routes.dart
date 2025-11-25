@@ -7,6 +7,7 @@ import 'package:dashboard/pages/scan/loaded_view.dart';
 import 'package:dashboard/pages/scan/scan.dart';
 import 'package:dashboard/pages/scan/search/search.dart';
 import 'package:dashboard/pages/simulate/simulate.dart';
+import 'package:dashboard/pages/table/table.dart';
 import 'package:get/get.dart';
 
 appRoutes() => [
@@ -16,6 +17,7 @@ appRoutes() => [
   GetPage(name: "/scan", page: () => const ScanPage()),
   GetPage(name: "/dashboard", page: () => const Dashboard()),
   GetPage(name: "/searchScreen", page: () => const SearchScreen()),
+  GetPage(name: "/table", page: () => const TableWid()),
   GetPage(
     name: "/load",
     page: () => const LoadedView(binId: ''),

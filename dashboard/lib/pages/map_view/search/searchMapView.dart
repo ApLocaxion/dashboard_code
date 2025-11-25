@@ -9,6 +9,7 @@ import 'package:dashboard/pages/map_view/search/markerLayer.dart';
 import 'package:dashboard/pages/map_view/search/search.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
 import 'package:dashboard/pages/scan/search/image_layer.dart';
+import 'package:dashboard/pages/scan/search/svgLayer.dart';
 import 'package:dashboard/service/container_api_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,15 @@ class _SearchMapViewState extends State<SearchMapView> {
                 );
               }),
             ),
+            // Positioned.fill(
+            //   child: Obx(() {
+            //     return SvgLayer(
+            //       cfg: cfg,
+            //       zoom: mapController.zoom.value,
+            //       panPx: mapController.panPx.value,
+            //     );
+            //   }),
+            // ),
             Obx(() {
               return ZoneLayer(
                 cfg: cfg,

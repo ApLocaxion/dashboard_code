@@ -15,6 +15,8 @@ class Themes {
 
       // Errors
       error: Colors.red,
+      scrim: Colors.orangeAccent,
+      surfaceTint: Colors.green,
 
       // Text colors on top of primary/secondary
       onPrimary: Colors.white,

@@ -1,0 +1,55 @@
+[
+
+  {
+    "zoneId": 4,
+    "code": "tandem o0",
+    "hasChild": true,
+    "hasParent": false,
+    "chlidId": [5],
+    "active": true,
+    "title": "t o0",
+    "description": "Scrap Unwinder",
+    "boundary": "POLYGON((68.6 22.0, 78.0 20.0, 75.0 13.0, 67.0 15.0, 68.6 22.0))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  },
+  {
+    "zoneId": 5,
+    "code": "tandem 01",
+    "hasChild": false,
+    "hasParent": true,
+    "parentId" : [4],
+    "active": true,
+    "title": "t 01",
+    "description": "Scrap Unwinder",
+    "boundary": "POLYGON ((70 20, 69 18, 71 17, 72 19, 70 20))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  },
+  {
+    "zoneId": 6,
+    "code": "ROAD-START",
+    "hasChild": false,
+    "hasParent": false,
+    "active": true,
+    "title": "Slitter 8 and 12 Scrap Storage (North)",
+    "description": "Storage Area",
+    "boundary": "POLYGON ((86 33, 90 32, 84 14, 80 16, 86 33))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  },
+  {
+    "zoneId": 9,
+    "code": "OUTER",
+    "hasChild": true,
+    "hasParent": false,
+    "chlidId": [4,5,6,7],
+    "active": true,
+    "title": "Slitter 8 and 12 Scrap Storage (North)",
+    "description": "Storage Area",
+    "boundary": "POLYGON((43.0 11.0, 75.0 3.0, 88.0 35.0, 63.0 47.0, 43.0 11.0))",
+    "zmax": 100.0,
+    "zmin": -1.0
+  }
+
+]

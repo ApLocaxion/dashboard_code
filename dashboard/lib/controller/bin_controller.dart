@@ -7,6 +7,7 @@ class BinController extends GetxController {
   var allBin = <BinModel>[].obs;
 
   final Rxn<BinModel> selectedBin = Rxn<BinModel>();
+  final Rxn<BinModel> selectedBinForDetail = Rxn<BinModel>();
 
   final isLoaded = false.obs;
 

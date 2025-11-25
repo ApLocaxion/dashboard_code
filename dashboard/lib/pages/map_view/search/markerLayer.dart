@@ -85,250 +85,234 @@ class _MarkerLayerState extends State<MarkerLayer> {
 
   final binController = Get.find<BinController>(tag: 'binController');
 
-  BinModel? _selectedBin;
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent, // IMPORTANT
-      onTapDown: (_) {
-        setState(() {
-          _selectedBin = null; // Reset on any tap
-        });
-      },
-      onTap: () {
-        setState(() {
-          _selectedBin = null;
-        });
-      },
-      child: LayoutBuilder(
-        builder: (ctx, constraints) {
-          final vis = _visibleWorld(
-            Size(constraints.maxWidth, constraints.maxHeight),
-          );
-          final children = <Widget>[];
-
-          // Forklifts (containers)
-          for (final c in widget.containers) {
-            final x = (c.x).toDouble();
-            final y = (c.y).toDouble();
-            if (x == 0 && y == 0) continue;
-            if (x < _originX ||
-                y < _originY ||
-                x > _originX + _worldWm ||
-                y > _originY + _worldHm) {
-              continue;
-            }
-            // if (!vis.contains(Offset(x, y))) continue;
-
-            final p = _toScreen(x, y);
-            final sizePx = widget.screenFixedSize
-                ? widget.iconSize
-                : widget.iconSize * widget.zoom;
-
-            children.add(
-              // This ensures the widget center is exactly at p
-              Positioned(
-                left: p.dx - sizePx / 2,
-                top: p.dy - sizePx / 2,
-                width: 30,
-                height: 30,
-                child: RepaintBoundary(
-                  child: Image(
-                    image: AssetImage('assets/fu.png'),
-                    opacity: AlwaysStoppedAnimation(1),
-                    color: Colors.orangeAccent,
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.low,
-                  ),
-                ),
-              ),
-              // This ensures the widget center is exactly at p
-              // Positioned(
-              //   left: p.dx - sizePx / 2,
-              //   top: p.dy - sizePx / 2,
-              //   width: sizePx,
-              //   height: sizePx,
-              //   child: RepaintBoundary(
-              //     child: Obx(
-              //       () => Icon(
-              //         Icons.location_on_outlined,
-              //         color: webSocketController.isConnected.value
-              //             ? Colors.green
-              //             : Colors.red,
-              //       ),
-              //     ),
-              //   ),
-              // ),
+    return Obx(() {
+      final _ = binController.selectedBinForDetail.value;
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent, // IMPORTANT
+        onTapDown: (_) {
+          setState(() {
+            binController.selectedBinForDetail.value = null; // Reset on any tap
+          });
+        },
+        onTap: () {
+          setState(() {
+            binController.selectedBinForDetail.value = null;
+          });
+        },
+        child: LayoutBuilder(
+          builder: (ctx, constraints) {
+            final vis = _visibleWorld(
+              Size(constraints.maxWidth, constraints.maxHeight),
             );
+            final children = <Widget>[];
 
-            // Optional label next to the marker
-            if ((c.slamCoreId).isNotEmpty) {
+            // Forklifts (containers)
+            for (final c in widget.containers) {
+              final x = (c.x).toDouble();
+              final y = (c.y).toDouble();
+              if (x == 0 && y == 0) continue;
+              if (x < _originX ||
+                  y < _originY ||
+                  x > _originX + _worldWm ||
+                  y > _originY + _worldHm) {
+                continue;
+              }
+              // if (!vis.contains(Offset(x, y))) continue;
+
+              final p = _toScreen(x, y);
+              final sizePx = widget.screenFixedSize
+                  ? widget.iconSize
+                  : widget.iconSize * widget.zoom;
+
               children.add(
+                // This ensures the widget center is exactly at p
                 Positioned(
-                  left: p.dx - 10,
-                  top: p.dy + 15,
-                  child: IgnorePointer(
-                    child: Text(
-                      c.slamCoreId,
-                      style: const TextStyle(
-                        color: Color(0xFF1A1A1A),
-                        fontSize: 12,
-                      ),
+                  left: p.dx - sizePx / 2,
+                  top: p.dy - sizePx / 2,
+                  width: 30,
+                  height: 30,
+                  child: RepaintBoundary(
+                    child: Image(
+                      image: AssetImage('assets/fu.png'),
+                      opacity: AlwaysStoppedAnimation(1),
+                      color: Colors.orangeAccent,
+                      fit: BoxFit.contain,
+                      filterQuality: FilterQuality.low,
                     ),
                   ),
                 ),
               );
+
+              // Optional label next to the marker
+              if ((c.slamCoreId).isNotEmpty) {
+                children.add(
+                  Positioned(
+                    left: p.dx - 10,
+                    top: p.dy + 15,
+                    child: IgnorePointer(
+                      child: Text(
+                        c.slamCoreId,
+                        style: const TextStyle(
+                          color: Color(0xFF1A1A1A),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
             }
-          }
 
-          /// change bin icon size * zoom
-          ///
-          // Bins
-          for (final b in widget.bins) {
-            final x = (b.x);
-            final y = (b.y);
-            if (x == 0 && y == 0) continue;
-            if (x < _originX ||
-                y < _originY ||
-                x > _originX + _worldWm ||
-                y > _originY + _worldHm) {
-              continue;
-            }
-            if (!vis.contains(Offset(x, y))) continue;
+            /// change bin icon size * zoom
+            ///
+            // Bins
+            for (final b in widget.bins) {
+              final x = (b.x);
+              final y = (b.y);
+              if (x == 0 && y == 0) continue;
+              if (x < _originX ||
+                  y < _originY ||
+                  x > _originX + _worldWm ||
+                  y > _originY + _worldHm) {
+                continue;
+              }
+              if (!vis.contains(Offset(x, y))) continue;
 
-            final isSelected =
-                binController.selectedBin.value?.binId == b.binId;
+              final isSelected =
+                  binController.selectedBin.value?.binId == b.binId;
 
-            final p = _toScreen(x, y);
-            final sizePx = widget.screenFixedSize
-                ? widget.iconSize
-                : widget.iconSize * widget.zoom;
+              final p = _toScreen(x, y);
+              final sizePx = widget.screenFixedSize
+                  ? widget.iconSize
+                  : widget.iconSize * widget.zoom;
 
-            if (_selectedBin != null) {
-              final b = _selectedBin!;
-              children.add(
-                Positioned(
-                  right: 20,
-                  top: 10,
-                  child: SizedBox(
-                    width: 200,
-                    child: CommonUi().appCard(
-                      context: context,
-                      child: Column(
-                        children: [
-                          Text(
-                            "BIN DETAILS",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w700,
+              if (binController.selectedBinForDetail.value != null) {
+                final b = binController.selectedBinForDetail.value!;
+                children.add(
+                  Positioned(
+                    right: 20,
+                    top: 10,
+                    child: SizedBox(
+                      width: 200,
+                      child: CommonUi().appCard(
+                        context: context,
+                        child: Column(
+                          children: [
+                            Text(
+                              "BIN DETAILS",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          const Divider(),
-                          CommonUi().detailRow(
-                            "Location :",
-                            b.zoneCode != null
-                                ? "${b.zoneCode}"
-                                : "N/AN/AN/AN/AN/AN/AN/A",
-                            Theme.of(context).colorScheme,
-                          ),
-                          CommonUi().horizontalDivider(height: 6),
-                          CommonUi().detailRow(
-                            "Forklift :",
-                            '${b.forkliftId}',
-                            Theme.of(context).colorScheme,
-                          ),
-                          CommonUi().horizontalDivider(height: 6),
-                          CommonUi().detailRow(
-                            "Weight :",
-                            'N/A',
-                            Theme.of(context).colorScheme,
-                          ),
-                        ],
+                            const Divider(),
+                            CommonUi().detailRow(
+                              "Location :",
+                              b.zoneCode != null
+                                  ? "${b.zoneCode}"
+                                  : "N/AN/AN/AN/AN/AN/AN/A",
+                              Theme.of(context).colorScheme,
+                            ),
+                            CommonUi().horizontalDivider(height: 6),
+                            CommonUi().detailRow(
+                              "Forklift :",
+                              '${b.forkliftId}',
+                              Theme.of(context).colorScheme,
+                            ),
+                            CommonUi().horizontalDivider(height: 6),
+                            CommonUi().detailRow(
+                              "Weight :",
+                              'N/A',
+                              Theme.of(context).colorScheme,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }
+                );
+              }
 
-            if (isSelected) {
-              final highlightSize = sizePx * 2.5;
-              children.add(
-                Positioned(
-                  left: p.dx - highlightSize / 2 + 10,
-                  top: p.dy - highlightSize / 2 + 10,
-                  width: highlightSize,
-                  height: highlightSize,
-                  child: IgnorePointer(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.red, width: 3),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
-
-            children.add(
-              Positioned(
-                left: p.dx - sizePx / 2,
-                top: p.dy - sizePx / 2,
-                width: sizePx,
-                height: sizePx,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.inventory_2,
-                    color: b.status == 'load' ? Colors.blue : Colors.grey,
-                  ),
-                  onPressed: () {
-                    binController.selectedBin.value = b;
-                    setState(() {
-                      _selectedBin = b;
-                    });
-                  },
-                ),
-              ),
-            );
-
-            if (b.binId.isNotEmpty) {
-              if (widget.zoom < 15) continue;
-              children.add(
-                Positioned(
-                  left: p.dx - 5,
-                  top: p.dy + 17,
-                  child: Material(
-                    color: Colors.transparent,
+              if (isSelected) {
+                final highlightSize = sizePx * 2.5;
+                children.add(
+                  Positioned(
+                    left: p.dx - highlightSize / 2 + 10,
+                    top: p.dy - highlightSize / 2 + 10,
+                    width: highlightSize,
+                    height: highlightSize,
                     child: IgnorePointer(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 2,
-                        ),
                         decoration: BoxDecoration(
-                          // <-- background color
-                          borderRadius: BorderRadius.circular(4),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.red, width: 3),
                         ),
-                        child: Text(
-                          b.binId,
-                          style: const TextStyle(
-                            color: Color(0xFF000000),
-                            fontSize: 12,
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              children.add(
+                Positioned(
+                  left: p.dx - sizePx / 2,
+                  top: p.dy - sizePx / 2,
+                  width: sizePx,
+                  height: sizePx,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.inventory_2,
+                      color: b.status == 'load' ? Colors.blue : Colors.grey,
+                    ),
+                    onPressed: () {
+                      binController.selectedBin.value = b;
+                      setState(() {
+                        binController.selectedBinForDetail.value = b;
+                      });
+                    },
+                  ),
+                ),
+              );
+
+              if (b.binId.isNotEmpty) {
+                if (widget.zoom < 15) continue;
+                children.add(
+                  Positioned(
+                    left: p.dx - 5,
+                    top: p.dy + 17,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IgnorePointer(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            // <-- background color
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            b.binId,
+                            style: const TextStyle(
+                              color: Color(0xFF000000),
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
+                );
+              }
             }
-          }
 
-          return Stack(clipBehavior: Clip.none, children: children);
-        },
-      ),
-    );
+            return Stack(clipBehavior: Clip.none, children: children);
+          },
+        ),
+      );
+    });
   }
 }

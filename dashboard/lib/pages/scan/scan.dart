@@ -546,195 +546,155 @@ class _ScanPageState extends State<ScanPage> {
               shiftTime: 'N/A',
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CommonUi().appCard(
                 context: context,
                 child: Column(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height / 7,
-                          child: CommonUi().primaryActionButtonHorzontal(
-                            color: !homePageController.scan.value
-                                ? Colors.red
-                                : Colors.green,
-                            onTap: () {
-                              homePageController.scan.value =
-                                  !homePageController.scan.value;
-                              if (homePageController.scan.value) {
-                                _focusNode.requestFocus();
-                              }
-                            },
-                            context: context,
-                            icon: Icons.qr_code_scanner,
-                            label: !homePageController.scan.value
-                                ? "Stop Scan"
-                                : "Scanning",
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 0,
-                            ),
-                            child: KeyboardListener(
-                              focusNode: FocusNode(),
-                              autofocus: true,
-                              onKeyEvent: (event) {
-                                // _focusNode.requestFocus();
-                                // if (homePageController.scan.value) {
-                                //   _focusNode.requestFocus();
-                                // }
-                                // if (homePageController.scan.value) {
-                                //   if (event.logicalKey.keyLabel ==
-                                //       "Backspace") {
-                                //     if (_controller.text.isNotEmpty) {
-                                //       final newText = _controller.text
-                                //           .substring(
-                                //             0,
-                                //             _controller.text.length - 1,
-                                //           );
-
-                                //       _controller.value = TextEditingValue(
-                                //         text: newText,
-                                //         selection: TextSelection.collapsed(
-                                //           offset: newText.length,
-                                //         ),
-                                //       );
-
-                                //       binController.scanedBin.value = newText;
-                                //     }
-                                //     return;
-                                //   }
-                                //   if (event.character != null) {
-                                //     final char = event.character!.toUpperCase();
-
-                                //     /// only if its diff
-                                //     if (event.logicalKey.keyLabel == 'Enter') {
-                                //       _handleLoad();
-                                //       return;
-                                //     }
-                                //     final newText = _controller.text + char;
-                                //     binController.scanedBin.value = newText;
-                                //     _controller.value = _controller.value
-                                //         .copyWith(
-                                //           text: newText,
-                                //           selection: TextSelection.collapsed(
-                                //             offset: newText.length,
-                                //           ),
-                                //         );
-                                //   }
-                                // }
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height / 6.8,
+                            child: CommonUi().primaryActionButtonHorzontal(
+                              color: !homePageController.scan.value
+                                  ? Colors.red
+                                  : Colors.green,
+                              onTap: () {
+                                homePageController.scan.value =
+                                    !homePageController.scan.value;
+                                if (homePageController.scan.value) {
+                                  _focusNode.requestFocus();
+                                }
                               },
-                              child: TextFormField(
-                                controller: _controller,
+                              context: context,
+                              icon: Icons.qr_code_scanner,
+                              label: !homePageController.scan.value
+                                  ? "Paused"
+                                  : "Scanning",
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 0,
+                              ),
+                              child: KeyboardListener(
+                                focusNode: FocusNode(),
+                                autofocus: true,
+                                onKeyEvent: (event) {},
+                                child: TextFormField(
+                                  controller: _controller,
 
-                                focusNode: _focusNode,
-                                textAlign: TextAlign.center,
-                                readOnly: !homePageController.scan.value,
-                                textInputAction: TextInputAction.done,
+                                  focusNode: _focusNode,
+                                  textAlign: TextAlign.center,
+                                  readOnly: !homePageController.scan.value,
+                                  textInputAction: TextInputAction.done,
 
-                                onChanged: (value) {
-                                  _focusNode.requestFocus();
-                                  _debounce?.cancel(); // Cancel previous timer
-                                  _debounce = Timer(
-                                    Duration(milliseconds: 500),
-                                    () {
-                                      if (value ==
-                                          binController.scanedBin.value) {
-                                        return;
-                                      }
-                                      if (homePageController.scan.value) {
-                                        binController.scanedBin.value = '';
-                                        final upper = value.toUpperCase();
-                                        if (value != upper) {
-                                          _controller.value = _controller.value
-                                              .copyWith(
-                                                text: upper,
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                      offset: upper.length,
-                                                    ),
-                                              );
-                                        }
-                                        binController.scanedBin.value = value
-                                            .toUpperCase();
-                                        _controller.clear();
-                                      }
-                                    },
-                                  );
-                                },
-                                onFieldSubmitted: (value) {
-                                  _showConfirmOverlay();
-                                  _focusNode.requestFocus();
-                                },
-                                cursorColor: Colors.black, // or a brand color
-                                cursorWidth: 2.0,
-                                style: TextStyle(
-                                  fontSize:
-                                      MediaQuery.of(context).size.height /
-                                      16, // 🔥 text size
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                                textCapitalization:
-                                    TextCapitalization.characters,
-
-                                decoration: InputDecoration(
-                                  labelText: 'SCAN OR TYPE BIN ID',
-                                  prefixText: binController.scanedBin.value,
-
-                                  border: const OutlineInputBorder(),
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.never,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.grey.shade400,
-                                      width: 1.2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: const Color.fromARGB(
-                                        255,
-                                        94,
-                                        204,
-                                        255,
-                                      ),
-                                      width: 1.2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Tooltip(
-                                        message: _showVirtualKeyboard
-                                            ? 'Hide virtual keyboard'
-                                            : 'Show virtual keyboard',
-                                        child: IconButton(
-                                          icon: const Icon(Icons.keyboard),
-                                          iconSize: 35,
-                                          onPressed: _toggleKeyboard,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  // If user taps field while keyboard is visible, keep focus
-                                  if (_showVirtualKeyboard)
+                                  onChanged: (value) {
                                     _focusNode.requestFocus();
-                                },
+                                    _debounce
+                                        ?.cancel(); // Cancel previous timer
+                                    _debounce = Timer(
+                                      Duration(milliseconds: 500),
+                                      () {
+                                        if (value ==
+                                            binController.scanedBin.value) {
+                                          return;
+                                        }
+                                        if (homePageController.scan.value) {
+                                          binController.scanedBin.value = '';
+                                          final upper = value.toUpperCase();
+                                          if (value != upper) {
+                                            _controller.value = _controller
+                                                .value
+                                                .copyWith(
+                                                  text: upper,
+                                                  selection:
+                                                      TextSelection.collapsed(
+                                                        offset: upper.length,
+                                                      ),
+                                                );
+                                          }
+                                          binController.scanedBin.value = value
+                                              .toUpperCase();
+                                          _controller.clear();
+                                        }
+                                      },
+                                    );
+                                  },
+                                  onFieldSubmitted: (value) {
+                                    _showConfirmOverlay();
+                                    _focusNode.requestFocus();
+                                  },
+                                  cursorColor: Colors.black, // or a brand color
+                                  cursorWidth: 2.0,
+                                  style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height /
+                                        14, // 🔥 text size
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                  textCapitalization:
+                                      TextCapitalization.characters,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'SCAN OR TYPE BIN ID',
+                                    prefixText: binController.scanedBin.value,
+
+                                    border: const OutlineInputBorder(),
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.never,
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.grey.shade400,
+                                        width: 1.2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          94,
+                                          204,
+                                          255,
+                                        ),
+                                        width: 1.2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    suffixIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Tooltip(
+                                          message: _showVirtualKeyboard
+                                              ? 'Hide virtual keyboard'
+                                              : 'Show virtual keyboard',
+                                          child: IconButton(
+                                            icon: const Icon(Icons.keyboard),
+                                            iconSize: 35,
+                                            onPressed: _toggleKeyboard,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    // If user taps field while keyboard is visible, keep focus
+                                    if (_showVirtualKeyboard)
+                                      _focusNode.requestFocus();
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Row(

@@ -24,24 +24,6 @@ class _SearchScreenState extends State<SearchScreen> {
   );
   final mapController = Get.find<MapController>(tag: 'mapController');
 
-  double get _originX => -150;
-  double get _originY => -150;
-  double get _worldHm => 150 + 2 * 150;
-
-  Offset _toScreen(double xm, double ym) {
-    final xPx =
-        (xm - _originX) * mapController.zoom.value +
-        mapController.panPx.value.dx;
-    final yImg = (ym - _originY) * mapController.zoom.value;
-    final heightPx = _worldHm * mapController.zoom.value;
-    final yPx = (heightPx - yImg) + mapController.panPx.value.dy; // flip Y
-    return Offset(xPx, yPx);
-  }
-
-  Offset _screenToWorld(Offset screen) {
-    return (screen - mapController.panPx.value) / mapController.zoom.value;
-  }
-
   final mapKey = GlobalKey();
 
   @override
@@ -174,6 +156,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                         center - markerPx;
 
                                     binController.selectedBin.value = bin;
+                                    binController.selectedBinForDetail.value =
+                                        null;
                                   },
                                   child: CommonUi().appCard(
                                     context: context,
