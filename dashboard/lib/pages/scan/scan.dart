@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dashboard/common/common_ui.dart';
 import 'package:dashboard/common/common_widgets.dart';
 import 'package:dashboard/controller/bin_controller.dart';
@@ -518,6 +520,8 @@ class _ScanPageState extends State<ScanPage> {
     return (z == null || z.isEmpty) ? "N/A" : z;
   }
 
+  Timer? _debounce;
+
   @override
   Widget build(BuildContext context) {
     // On mobile, autofocus helps pop the native keyboard. On desktop web we keep it false.
@@ -627,26 +631,41 @@ class _ScanPageState extends State<ScanPage> {
                               },
                               child: TextFormField(
                                 controller: _controller,
+
                                 focusNode: _focusNode,
                                 textAlign: TextAlign.center,
                                 readOnly: !homePageController.scan.value,
                                 textInputAction: TextInputAction.done,
+
                                 onChanged: (value) {
                                   _focusNode.requestFocus();
-                                  if (homePageController.scan.value) {
-                                    final upper = value.toUpperCase();
-                                    if (value != upper) {
-                                      _controller.value = _controller.value
-                                          .copyWith(
-                                            text: upper,
-                                            selection: TextSelection.collapsed(
-                                              offset: upper.length,
-                                            ),
-                                          );
-                                    }
-                                    binController.scanedBin.value = value
-                                        .toUpperCase();
-                                  }
+                                  _debounce?.cancel(); // Cancel previous timer
+                                  _debounce = Timer(
+                                    Duration(milliseconds: 500),
+                                    () {
+                                      if (value ==
+                                          binController.scanedBin.value) {
+                                        return;
+                                      }
+                                      if (homePageController.scan.value) {
+                                        binController.scanedBin.value = '';
+                                        final upper = value.toUpperCase();
+                                        if (value != upper) {
+                                          _controller.value = _controller.value
+                                              .copyWith(
+                                                text: upper,
+                                                selection:
+                                                    TextSelection.collapsed(
+                                                      offset: upper.length,
+                                                    ),
+                                              );
+                                        }
+                                        binController.scanedBin.value = value
+                                            .toUpperCase();
+                                        _controller.clear();
+                                      }
+                                    },
+                                  );
                                 },
                                 onFieldSubmitted: (value) {
                                   _showConfirmOverlay();
@@ -666,6 +685,8 @@ class _ScanPageState extends State<ScanPage> {
 
                                 decoration: InputDecoration(
                                   labelText: 'SCAN OR TYPE BIN ID',
+                                  prefixText: binController.scanedBin.value,
+
                                   border: const OutlineInputBorder(),
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.never,
