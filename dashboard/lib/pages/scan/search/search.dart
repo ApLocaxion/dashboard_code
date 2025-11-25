@@ -232,29 +232,72 @@ class _SearchScreenState extends State<SearchScreen> {
                         const SizedBox(width: 24),
                         // Right details + map
                         Expanded(
-                          child: Container(
-                            key: mapKey,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFE5E7F0),
-                              borderRadius: BorderRadius.circular(28),
-                              border: Border.all(color: colors.tertiary),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    214,
-                                    214,
-                                    214,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  key: mapKey,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE5E7F0),
+                                    borderRadius: BorderRadius.circular(28),
+                                    border: Border.all(color: colors.tertiary),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color.fromARGB(
+                                          255,
+                                          214,
+                                          214,
+                                          214,
+                                        ),
+                                        blurRadius: 12, // how soft
+                                        spreadRadius: 2, // how wide
+                                        offset: const Offset(
+                                          0,
+                                          4,
+                                        ), // shadow position
+                                      ),
+                                    ],
                                   ),
-                                  blurRadius: 12, // how soft
-                                  spreadRadius: 2, // how wide
-                                  offset: const Offset(0, 4), // shadow position
+                                  height:
+                                      MediaQuery.of(context).size.height / 1.5,
+                                  child: SearchMapView(),
                                 ),
-                              ],
-                            ),
-                            height: MediaQuery.of(context).size.height / 1.5,
-                            child: SearchMapView(),
+                              ),
+                              const SizedBox(height: 12),
+                              CommonUi().appCard(
+                                padding: EdgeInsetsGeometry.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                context: context,
+                                child: Row(
+                                  children: [
+                                    CommonUi().buildToggle(
+                                      label: "BIN",
+                                      value: mapController.showBin,
+                                      colors: Theme.of(context).colorScheme,
+                                    ),
+                                    CommonUi().buildToggle(
+                                      label: "ZONE",
+                                      value: mapController.showZone,
+                                      colors: Theme.of(context).colorScheme,
+                                    ),
+                                    CommonUi().buildToggle(
+                                      label: "GRID",
+                                      value: mapController.showGrid,
+                                      colors: Theme.of(context).colorScheme,
+                                    ),
+                                    CommonUi().buildToggle(
+                                      label: "MAP",
+                                      value: mapController.showMap,
+                                      colors: Theme.of(context).colorScheme,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

@@ -180,50 +180,37 @@ function pointInPolygon(point, polygon) {
 function checkZones(pose) {
   const point = [pose.x, pose.y];
 
-  // First pass — find all zones that contain the point
-  let matchedZones = [];
+  // 1. Find ALL zones that contain the point
+  const matchedZones = [];
 
   for (const zone of zones) {
     const polygonCoords = parsePolygonWKT(zone.boundary);
     if (!polygonCoords.length) continue;
 
-    if (pointInPolygon(point, polygonCoords)) {
-      if (pose.z >= zone.zmin && pose.z <= zone.zmax) {
-        matchedZones.push(zone);
-      }
+    if (
+      pointInPolygon(point, polygonCoords) &&
+      pose.z >= zone.zmin &&
+      pose.z <= zone.zmax
+    ) {
+      matchedZones.push(zone);
     }
   }
 
   if (matchedZones.length === 0) return null;
+  if (matchedZones.length === 1) return matchedZones[0];
 
-  // If EXACTLY ONE matched and it has no hierarchy → return directly
-  if (matchedZones.length === 1) {
-    const z = matchedZones[0];
+  // 2. Find innermost zone(s)
+  const matchedIds = new Set(matchedZones.map((z) => z.zoneId));
 
-    // Check child zones first (child overrides parent)
-    if (z.hasChild && Array.isArray(z.chlidId)) {
-      for (const childId of z.chlidId) {
-        const childZone = zones.find((zz) => zz.zoneId === childId);
-        if (childZone && isPoseInsideZone(pose, childZone)) {
-          return childZone;
-        }
-      }
-    }
+  const innerMostZones = matchedZones.filter((zone) => {
+    const children = zone.childId || zone.chlidId || [];
+    const hasChildInMatch = children.some((childId) => matchedIds.has(childId));
+    return !hasChildInMatch;
+  });
 
-    // If zone has parent → return parent instead
-    if (z.hasParent && Array.isArray(z.parentId)) {
-      const parentZone = zones.find((zz) => zz.zoneId === z.parentId[0]);
-      return parentZone || z;
-    }
+  if (innerMostZones.length > 0) return innerMostZones[0];
 
-    return z;
-  }
-
-  // If MULTIPLE zones match → always return the smallest or deepest zone (child)
-  const childZones = matchedZones.filter((z) => z.hasParent);
-  if (childZones.length > 0) return childZones[0];
-
-  // If no child zones → return the first matched
+  // Fallback
   return matchedZones[0];
 }
 

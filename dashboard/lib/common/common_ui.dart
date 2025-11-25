@@ -448,6 +448,45 @@ class CommonUi {
     );
   }
 
+  Widget buildToggle({
+    required String label,
+    required RxBool value,
+    required ColorScheme colors,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Obx(() {
+            final isOn = value.value;
+
+            return AnimatedScale(
+              scale: isOn ? 1.0 : 0.92, // slight "pop" when ON
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              child: Switch(
+                value: isOn,
+                activeThumbColor: colors.primary,
+                inactiveThumbColor: colors.tertiary,
+                onChanged: (val) => value.value = val,
+              ),
+            );
+          }),
+          const SizedBox(height: 2),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget horizontalDivider({double height = 32}) {
     return Divider(height: height, thickness: 1, color: Color(0xFFE5E7EB));
   }

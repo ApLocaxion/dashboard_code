@@ -84,25 +84,29 @@ class _SearchMapViewState extends State<SearchMapView> {
         child: Stack(
           children: [
             Positioned.fill(
-              child: Obx(() {
-                return GridLayer(
-                  cfg: cfg,
-                  zoom: mapController.zoom.value,
-                  panPx: mapController.panPx.value,
-                  minorStepM: 1,
-                  majorStepM: 10,
-                  showLabels: true,
-                );
-              }),
+              child: Obx(
+                () => !mapController.showGrid.value
+                    ? const SizedBox.shrink()
+                    : GridLayer(
+                        cfg: cfg,
+                        zoom: mapController.zoom.value,
+                        panPx: mapController.panPx.value,
+                        minorStepM: 1,
+                        majorStepM: 10,
+                        showLabels: true,
+                      ),
+              ),
             ),
             Positioned.fill(
-              child: Obx(() {
-                return ImageLayer(
-                  cfg: cfg,
-                  zoom: mapController.zoom.value,
-                  panPx: mapController.panPx.value,
-                );
-              }),
+              child: Obx(
+                () => !mapController.showMap.value
+                    ? const SizedBox.shrink()
+                    : ImageLayer(
+                        cfg: cfg,
+                        zoom: mapController.zoom.value,
+                        panPx: mapController.panPx.value,
+                      ),
+              ),
             ),
             // Positioned.fill(
             //   child: Obx(() {
@@ -113,15 +117,20 @@ class _SearchMapViewState extends State<SearchMapView> {
             //     );
             //   }),
             // ),
-            Obx(() {
-              return ZoneLayer(
-                cfg: cfg,
-                zoom: mapController.zoom.value,
-                panPx: mapController.panPx.value,
-              );
-            }),
+            Obx(
+              () => !mapController.showZone.value
+                  ? const SizedBox.shrink()
+                  : ZoneLayer(
+                      cfg: cfg,
+                      zoom: mapController.zoom.value,
+                      panPx: mapController.panPx.value,
+                    ),
+            ),
             Positioned.fill(
               child: Obx(() {
+                if (!mapController.showBin.value) {
+                  return SizedBox.shrink();
+                }
                 // Touch RxLists inside Obx to register dependencies
                 final bins = binController.allBin.toList();
                 final containers = containerController.containerList.toList();
@@ -135,115 +144,6 @@ class _SearchMapViewState extends State<SearchMapView> {
               }),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget searchButton(BuildContext context) {
-    return Positioned(
-      top: 10,
-      right: 10,
-      child: ElevatedButton(
-        onPressed: () {
-          //
-          showSearchPanel(context);
-        },
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          padding: const EdgeInsets.all(16),
-        ),
-        child: const Icon(Icons.search, size: 30, color: Colors.amber),
-      ),
-    );
-  }
-
-  Widget spaghettiSlider(BuildContext context) {
-    return Positioned(
-      top: 120,
-      right: 10,
-      child: Material(
-        elevation: 10,
-        borderRadius: BorderRadius.circular(16),
-        color: const Color.fromARGB(255, 80, 42, 42),
-        surfaceTintColor: Colors.amber,
-        shadowColor: Colors.black26,
-        child: Container(
-          width: 320,
-          height: 420,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              colors: [Colors.white, Colors.blueGrey.shade50],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            border: Border.all(color: Colors.blueGrey.shade100, width: 1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Select Date Range",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(thickness: 1, height: 16),
-              Expanded(
-                child: RangeDatePicker(
-                  centerLeadingDate: true,
-                  minDate: DateTime(2020, 10, 10),
-                  maxDate: DateTime.now(),
-                  onStartDateChanged: (value) async {},
-                  onEndDateChanged: (value) async {
-                    // final time = await showTimePicker(
-                    //   context: context,
-                    //   initialTime: TimeOfDay(
-                    //     hour: DateTime.now().hour,
-                    //     minute: DateTime.now().minute,
-                    //   ),
-                    // );
-                  },
-                  onRangeSelected: (range) async {
-                    // Handle selected range
-                    ContainerService().getAllPosition(
-                      deviceId: "fake-device-001",
-                      startDate: range.start,
-                      endDate: range.end,
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.check_circle_outline, size: 20),
-                  label: const Text("Apply Range"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  onPressed: () {
-                    // Apply selected range action
-                  },
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
