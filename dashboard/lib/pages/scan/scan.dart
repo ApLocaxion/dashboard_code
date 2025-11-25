@@ -171,68 +171,70 @@ class _ScanPageState extends State<ScanPage> {
                     ),
                   ),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 24),
-                    Text(
-                      'ARE YOU LOADING BIN?',
-                      style: TextStyle(
-                        fontSize: size.height / 30,
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.onSurface,
+                Obx(
+                  () => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 24),
+                      Text(
+                        'ARE YOU LOADING BIN?',
+                        style: TextStyle(
+                          fontSize: size.height / 30,
+                          fontWeight: FontWeight.w900,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      binId,
-                      style: TextStyle(
-                        fontSize: size.height / 18,
-                        fontWeight: FontWeight.w900,
+                      const SizedBox(height: 8),
+                      Text(
+                        binController.scanedBin.value.trim(),
+                        style: TextStyle(
+                          fontSize: size.height / 18,
+                          fontWeight: FontWeight.w900,
 
-                        color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: size.height / 20),
-                    CommonUi().appCard(
-                      context: context,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: size.height / 21,
-                        vertical: size.height / 30,
+                      SizedBox(height: size.height / 20),
+                      CommonUi().appCard(
+                        context: context,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: size.height / 21,
+                          vertical: size.height / 30,
+                        ),
+                        child: Column(
+                          children: [
+                            CommonUi().infoRow(
+                              context: context,
+                              label: 'ALLOY:',
+                              value: 'N/A',
+                            ),
+                            Divider(
+                              height: size.height / 21,
+                              thickness: 1,
+                              color: Color(0xFFE5E7EB),
+                            ),
+                            CommonUi().infoRow(
+                              context: context,
+                              label: 'WEIGHT:',
+                              value: 'N/A',
+                            ),
+                            Divider(
+                              height: size.height / 21,
+                              thickness: 1,
+                              color: Color(0xFFE5E7EB),
+                            ),
+                            CommonUi().infoRow(
+                              context: context,
+                              label: 'LOCATION:',
+                              value: 'N/A',
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Column(
-                        children: [
-                          CommonUi().infoRow(
-                            context: context,
-                            label: 'ALLOY:',
-                            value: 'N/A',
-                          ),
-                          Divider(
-                            height: size.height / 21,
-                            thickness: 1,
-                            color: Color(0xFFE5E7EB),
-                          ),
-                          CommonUi().infoRow(
-                            context: context,
-                            label: 'WEIGHT:',
-                            value: 'N/A',
-                          ),
-                          Divider(
-                            height: size.height / 21,
-                            thickness: 1,
-                            color: Color(0xFFE5E7EB),
-                          ),
-                          CommonUi().infoRow(
-                            context: context,
-                            label: 'LOCATION:',
-                            value: 'N/A',
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.height / 21),
-                  ],
+                      SizedBox(height: size.height / 21),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -297,6 +299,217 @@ class _ScanPageState extends State<ScanPage> {
   @override
   void initState() {
     load();
+  }
+
+  // state fields
+  OverlayEntry? _confirmOverlay;
+
+  void _showConfirmOverlay() {
+    if (_confirmOverlay != null) return;
+    final overlay = Overlay.of(context);
+    if (overlay == null) return;
+
+    _confirmOverlay = OverlayEntry(
+      builder: (_) {
+        final size = MediaQuery.of(context).size;
+        return Stack(
+          children: [
+            const ModalBarrier(color: Colors.black54),
+            Center(
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                content: SizedBox(
+                  width: MediaQuery.of(context).size.width - 250,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 12,
+                        right: 0,
+                        child: CommonUi().appCard(
+                          context: context,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'VEHICLE ZONE',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w900,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                      letterSpacing: 1.8,
+                                    ),
+                                  ),
+                                  Text(
+                                    currentZone(index),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                child: const Icon(
+                                  Icons.location_on,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 24),
+                            Text(
+                              'ARE YOU LOADING BIN?',
+                              style: TextStyle(
+                                fontSize: size.height / 30,
+                                fontWeight: FontWeight.w900,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              binController.scanedBin.value.trim(),
+                              style: TextStyle(
+                                fontSize: size.height / 18,
+                                fontWeight: FontWeight.w900,
+
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            SizedBox(height: size.height / 20),
+                            CommonUi().appCard(
+                              context: context,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: size.height / 21,
+                                vertical: size.height / 30,
+                              ),
+                              child: Column(
+                                children: [
+                                  CommonUi().infoRow(
+                                    context: context,
+                                    label: 'ALLOY:',
+                                    value: 'N/A',
+                                  ),
+                                  Divider(
+                                    height: size.height / 21,
+                                    thickness: 1,
+                                    color: Color(0xFFE5E7EB),
+                                  ),
+                                  CommonUi().infoRow(
+                                    context: context,
+                                    label: 'WEIGHT:',
+                                    value: 'N/A',
+                                  ),
+                                  Divider(
+                                    height: size.height / 21,
+                                    thickness: 1,
+                                    color: Color(0xFFE5E7EB),
+                                  ),
+                                  CommonUi().infoRow(
+                                    context: context,
+                                    label: 'LOCATION:',
+                                    value: 'N/A',
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: size.height / 21),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                actions: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonUi().primaryActionButton(
+                          context: context,
+                          icon: Icons.error_outline_rounded,
+                          label: 'NO',
+                          color: const Color(0xFFE53935),
+                          onTap: () {
+                            _removeConfirmOverlay();
+                            _controller.clear();
+                            _focusNode.requestFocus();
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: CommonUi().primaryActionButton(
+                          context: context,
+                          icon: Icons.check_circle_outline_rounded,
+                          label: 'YES',
+                          color: Theme.of(context).colorScheme.primary,
+                          onTap: () async {
+                            _removeConfirmOverlay();
+                            final binId = binController.scanedBin.value.trim();
+                            await BinService().loadBin(
+                              binId,
+                              "load",
+                              deviceId:
+                                  homePageController
+                                      .simulateDeviceId
+                                      .value
+                                      .isEmpty
+                                  ? homePageController.deviceId.value
+                                  : homePageController.simulateDeviceId.value,
+                            );
+                            Get.toNamed(
+                              "/load",
+                              arguments: {'binId': 'BIN_12345'},
+                            );
+                            _focusNode.requestFocus();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    overlay.insert(_confirmOverlay!);
+    _focusNode.requestFocus(); // keep the main field active
+  }
+
+  void _removeConfirmOverlay() {
+    _confirmOverlay?.remove();
+    _confirmOverlay = null;
   }
 
   String currentZone(index) {
@@ -435,7 +648,10 @@ class _ScanPageState extends State<ScanPage> {
                                         .toUpperCase();
                                   }
                                 },
-                                onFieldSubmitted: (_) => _handleLoad(),
+                                onFieldSubmitted: (value) {
+                                  _showConfirmOverlay();
+                                  _focusNode.requestFocus();
+                                },
                                 cursorColor: Colors.black, // or a brand color
                                 cursorWidth: 2.0,
                                 style: TextStyle(
