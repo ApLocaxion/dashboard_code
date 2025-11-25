@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Themes {
   final lightTheme = ThemeData.light().copyWith(
+    textTheme: Typography.blackCupertino.apply(fontFamily: "SFPro"),
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
 

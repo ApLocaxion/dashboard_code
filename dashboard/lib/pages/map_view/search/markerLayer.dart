@@ -8,6 +8,8 @@ import 'package:dashboard/models/bin_model.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:get/get.dart';
 
+/// show text only after certain zoom level
+
 class MarkerLayer extends StatefulWidget {
   final MapConfig cfg;
   final double zoom;
@@ -29,7 +31,7 @@ class MarkerLayer extends StatefulWidget {
     required this.containers,
     required this.bins,
     this.onForkliftTap,
-    this.iconSize = 24,
+    this.iconSize = 20,
     this.screenFixedSize = true,
   });
 
@@ -129,33 +131,43 @@ class _MarkerLayerState extends State<MarkerLayer> {
               Positioned(
                 left: p.dx - sizePx / 2,
                 top: p.dy - sizePx / 2,
-                width: sizePx,
-                height: sizePx,
+                width: 30,
+                height: 30,
                 child: RepaintBoundary(
-                  child: GestureDetector(
-                    onTap: () {
-                      c;
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: Obx(
-                      () => Icon(
-                        Icons.location_on_outlined,
-                        color: webSocketController.isConnected.value
-                            ? Colors.green
-                            : Colors.red,
-                      ),
-                    ),
+                  child: Image(
+                    image: AssetImage('assets/fu.png'),
+                    opacity: AlwaysStoppedAnimation(1),
+                    color: Colors.orangeAccent,
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.low,
                   ),
                 ),
               ),
+              // This ensures the widget center is exactly at p
+              // Positioned(
+              //   left: p.dx - sizePx / 2,
+              //   top: p.dy - sizePx / 2,
+              //   width: sizePx,
+              //   height: sizePx,
+              //   child: RepaintBoundary(
+              //     child: Obx(
+              //       () => Icon(
+              //         Icons.location_on_outlined,
+              //         color: webSocketController.isConnected.value
+              //             ? Colors.green
+              //             : Colors.red,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             );
 
             // Optional label next to the marker
             if ((c.slamCoreId).isNotEmpty) {
               children.add(
                 Positioned(
-                  left: p.dx + 5,
-                  top: p.dy + 4,
+                  left: p.dx - 10,
+                  top: p.dy + 15,
                   child: IgnorePointer(
                     child: Text(
                       c.slamCoreId,
@@ -282,10 +294,11 @@ class _MarkerLayerState extends State<MarkerLayer> {
             );
 
             if (b.binId.isNotEmpty) {
+              if (widget.zoom < 15) continue;
               children.add(
                 Positioned(
-                  left: p.dx + 5,
-                  top: p.dy + 4,
+                  left: p.dx - 5,
+                  top: p.dy + 17,
                   child: Material(
                     color: Colors.transparent,
                     child: IgnorePointer(

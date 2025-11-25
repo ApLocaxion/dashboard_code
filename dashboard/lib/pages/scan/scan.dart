@@ -284,6 +284,9 @@ class _ScanPageState extends State<ScanPage> {
 
   int? index;
   load() async {
+    Future.delayed(Duration(milliseconds: 200), () {
+      if (mounted) _focusNode.requestFocus();
+    });
     await ContainerService().getAllForklift();
     index = containerController.containerList.indexWhere(
       (c) => c.slamCoreId == homePageController.deviceId.value,
@@ -332,14 +335,26 @@ class _ScanPageState extends State<ScanPage> {
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            homePageController.scan.value =
-                                !homePageController.scan.value;
-                          },
-                          child: Text(
-                            homePageController.scan.value ? "Stop" : "Scan",
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 7,
+                          child: CommonUi().primaryActionButtonHorzontal(
+                            color: !homePageController.scan.value
+                                ? Colors.red
+                                : Colors.green,
+                            onTap: () {
+                              homePageController.scan.value =
+                                  !homePageController.scan.value;
+                              if (homePageController.scan.value) {
+                                _focusNode.requestFocus();
+                              }
+                            },
+                            context: context,
+                            icon: Icons.qr_code_scanner,
+                            label: !homePageController.scan.value
+                                ? "Stop Scan"
+                                : "Scanning",
                           ),
                         ),
                         Expanded(
@@ -352,9 +367,10 @@ class _ScanPageState extends State<ScanPage> {
                               focusNode: FocusNode(),
                               autofocus: true,
                               onKeyEvent: (event) {
-                                if (homePageController.scan.value) {
-                                  _focusNode.requestFocus();
-                                }
+                                // _focusNode.requestFocus();
+                                // if (homePageController.scan.value) {
+                                //   _focusNode.requestFocus();
+                                // }
                                 // if (homePageController.scan.value) {
                                 //   if (event.logicalKey.keyLabel ==
                                 //       "Backspace") {
@@ -400,9 +416,11 @@ class _ScanPageState extends State<ScanPage> {
                                 controller: _controller,
                                 focusNode: _focusNode,
                                 textAlign: TextAlign.center,
+                                readOnly: !homePageController.scan.value,
                                 textInputAction: TextInputAction.done,
                                 onChanged: (value) {
-                                  if (!homePageController.scan.value) {
+                                  _focusNode.requestFocus();
+                                  if (homePageController.scan.value) {
                                     final upper = value.toUpperCase();
                                     if (value != upper) {
                                       _controller.value = _controller.value
@@ -423,7 +441,7 @@ class _ScanPageState extends State<ScanPage> {
                                 style: TextStyle(
                                   fontSize:
                                       MediaQuery.of(context).size.height /
-                                      18, // 🔥 text size
+                                      16, // 🔥 text size
                                   color: Colors.black,
                                   fontWeight: FontWeight.w800,
                                 ),

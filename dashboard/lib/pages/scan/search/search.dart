@@ -85,6 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.search_rounded),
                             hintText: 'Search by Bin ID or Alloy Grade...',
+                            // prefixText: "Bin",
                             hintStyle: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,

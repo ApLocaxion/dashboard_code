@@ -137,7 +137,7 @@ class CommonUi {
                       deviceId,
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w500,
                         color: Colors.white,
                         letterSpacing: 0.6,
                       ),
@@ -153,7 +153,7 @@ class CommonUi {
             'ScrapView™',
             style: TextStyle(
               fontSize: 24,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w500,
               color: Colors.white,
             ),
           ),
@@ -380,6 +380,68 @@ class CommonUi {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget primaryActionButtonHorzontal({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
+
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.white24,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: color == Colors.white ? colors.onSurfaceVariant : color,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.35),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                icon,
+                size: 26,
+                color: color == Colors.white ? colors.primary : Colors.white,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: color == Colors.white
+                      ? colors.onSurface
+                      : Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
