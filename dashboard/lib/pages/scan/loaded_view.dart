@@ -211,8 +211,8 @@ class _LoadedViewState extends State<LoadedView> {
                                 icon: Icons.logout_rounded,
                                 label: 'UNLOAD BIN',
                                 color: const Color(0xFFE53935),
-                                onTap: () {
-                                  BinService().loadBin(
+                                onTap: () async {
+                                  await BinService().loadBin(
                                     binController.scanedBin.value,
                                     "unload",
                                     deviceId:
@@ -225,6 +225,7 @@ class _LoadedViewState extends State<LoadedView> {
                                               .simulateDeviceId
                                               .value,
                                   );
+                                  binController.scanedBin.value = "";
                                   Get.toNamed('/scan');
                                 },
                               ),
