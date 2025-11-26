@@ -83,24 +83,24 @@ class MarkerOverlay extends StatelessWidget {
 
           final p0 = _toScreen(originPoint.dx, originPoint.dy);
           final imgSize = 140.0 * zoom;
-          children.add(
-            Positioned(
-              left: p0.dx,
-              top: p0.dy - imgSize, // bottom-left of image at (0,0)
-              width: imgSize,
-              height: imgSize,
-              child: const IgnorePointer(
-                child: Image(
-                  // image: AssetImage('assets/rt.png'),
-                  // image: AssetImage('assets/rb.jpg'),
-                  image: AssetImage('assets/map.jpg'),
-                  opacity: AlwaysStoppedAnimation(0.2),
-                  fit: BoxFit.contain,
-                  filterQuality: FilterQuality.low,
-                ),
-              ),
-            ),
-          );
+          // children.add(
+          //   Positioned(
+          //     left: p0.dx,
+          //     top: p0.dy - imgSize, // bottom-left of image at (0,0)
+          //     width: imgSize,
+          //     height: imgSize,
+          //     child: const IgnorePointer(
+          //       child: Image(
+          //         // image: AssetImage('assets/rt.png'),
+          //         // image: AssetImage('assets/rb.jpg'),
+          //         image: AssetImage('assets/map.jpg'),
+          //         opacity: AlwaysStoppedAnimation(0.2),
+          //         fit: BoxFit.contain,
+          //         filterQuality: FilterQuality.low,
+          //       ),
+          //     ),
+          //   ),
+          // );
 
           // containers.add(
           //   ContainerStateEventApiDTO(
