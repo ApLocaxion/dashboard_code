@@ -75,9 +75,6 @@ class MarkerOverlay extends StatelessWidget {
     return GestureDetector(
       child: LayoutBuilder(
         builder: (ctx, constraints) {
-          final vis = _visibleWorld(
-            Size(constraints.maxWidth, constraints.maxHeight),
-          );
           final children = <Widget>[];
 
           // Anchor image at world (0,0) with bottom-left alignment,
@@ -97,7 +94,7 @@ class MarkerOverlay extends StatelessWidget {
                   // image: AssetImage('assets/rt.png'),
                   // image: AssetImage('assets/rb.jpg'),
                   image: AssetImage('assets/map.jpg'),
-                  opacity: AlwaysStoppedAnimation(1),
+                  opacity: AlwaysStoppedAnimation(0.2),
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.low,
                 ),
@@ -190,7 +187,6 @@ class MarkerOverlay extends StatelessWidget {
                 y > _originY + _worldHm) {
               continue;
             }
-            if (!vis.contains(Offset(x, y))) continue;
 
             final p = _toScreen(x, y);
             final sizePx = screenFixedSize ? iconSize : iconSize * zoom;

@@ -1,12 +1,15 @@
 import 'package:dashboard/common/common_widgets.dart';
+import 'package:dashboard/common/env.dart';
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
+import 'package:dashboard/controller/map_controller.dart';
 import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:dashboard/pages/map_view/forklift_layer.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
+import 'package:dashboard/pages/scan/search/svgLayer.dart';
 import 'package:dashboard/pages/simulate/darw_simulate.dart';
 import 'package:dashboard/service/container_api_service.dart';
 import 'package:flutter/gestures.dart';
@@ -23,12 +26,7 @@ class SimulateView extends StatefulWidget {
 }
 
 class _SimulateViewState extends State<SimulateView> {
-  final cfg = const MapConfig(
-    widthMeters: 150,
-    heightMeters: 150,
-    marginMeters: 20,
-    pxPerMeter: 1,
-  );
+  final cfg = Env.cfg;
   final containerController = Get.find<ContainerController>(
     tag: 'containerController',
   );
@@ -77,6 +75,8 @@ class _SimulateViewState extends State<SimulateView> {
   bool _showVirtualKeyboard = false;
   final FocusNode _focusNode = FocusNode();
 
+  final mapController = Get.find<MapController>(tag: 'mapController');
+
   @override
   void initState() {
     containerController.showTrajector.value = false;
@@ -90,7 +90,7 @@ class _SimulateViewState extends State<SimulateView> {
         if (event is PointerScrollEvent) {
           const step = 0.12;
           final zoomDelta = event.scrollDelta.dy < 0 ? (1 + step) : (1 - step);
-          final newZoom = (zoom * zoomDelta).clamp(5.0, 500.0);
+          final newZoom = (zoom * zoomDelta).clamp(2.0, 500.0);
           final worldAtFocal = _screenToWorld(event.position);
           final newScale = cfg.pxPerMeter * newZoom;
           final newPan = event.position - worldAtFocal * newScale;
@@ -121,7 +121,7 @@ class _SimulateViewState extends State<SimulateView> {
                 }
               },
               onScaleUpdate: (details) {
-                final newZoom = (_startZoom * details.scale).clamp(5.0, 500.0);
+                final newZoom = (_startZoom * details.scale).clamp(2.0, 500.0);
                 final newScalePxPerMeter = cfg.pxPerMeter * newZoom;
                 final targetPan =
                     details.focalPoint -
@@ -142,6 +142,18 @@ class _SimulateViewState extends State<SimulateView> {
           ),
           Positioned.fill(
             child: Obx(() {
+              final _ = mapController.zoom.value;
+              return SvgLayer(
+                cfg: Env.cfg,
+                zoom: zoom,
+                panPx: panPx,
+                // zoom: mapController.zoom.value,
+                // panPx: mapController.panPx.value,
+              );
+            }),
+          ),
+          Positioned.fill(
+            child: Obx(() {
               // Touch RxLists inside Obx to register dependencies
               final bins = binController.allBin.toList();
               final containers = containerController.containerList.toList();
@@ -157,20 +169,20 @@ class _SimulateViewState extends State<SimulateView> {
           ZoneLayer(cfg: cfg, zoom: zoom, panPx: panPx),
           SimulationLayer(cfg: cfg, zoom: zoom, panPx: panPx),
           // searchButton(context),
-          Positioned(
-            top: 20,
-            left: 20,
-            child: IconButton(
-              onPressed: () {
-                Get.toNamed('/scan');
-              },
-              icon: Icon(
-                Icons.document_scanner_rounded,
-                size: 30,
-                color: const Color.fromARGB(255, 88, 85, 78),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 20,
+          //   left: 20,
+          //   child: IconButton(
+          //     onPressed: () {
+          //       Get.toNamed('/scan');
+          //     },
+          //     icon: Icon(
+          //       Icons.document_scanner_rounded,
+          //       size: 30,
+          //       color: const Color.fromARGB(255, 88, 85, 78),
+          //     ),
+          //   ),
+          // ),
           Positioned(
             top: 20,
             right: 20,

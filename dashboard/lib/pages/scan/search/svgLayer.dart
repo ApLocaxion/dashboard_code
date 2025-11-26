@@ -46,7 +46,7 @@ class _SvgLayerState extends State<SvgLayer> {
         children.add(
           Positioned(
             left: p0.dx,
-            top: p0.dy - imgWidth,
+            top: p0.dy - imgHeight,
             width: imgWidth,
             height: imgHeight,
             child: IgnorePointer(
