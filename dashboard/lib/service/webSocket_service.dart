@@ -93,16 +93,19 @@ class WebsocketService {
           final timestamp = transition['timestamp'];
           // final pose = transition['pose'];
 
-          if (containerController.containerList.isNotEmpty) {
+          if (event == "exit") {
+            //
+            containerController.currentZone.value = null;
+          } else if (containerController.containerList.isNotEmpty) {
             final index = containerController.containerList.indexWhere(
               (c) => c.slamCoreId == deviceId,
             );
-            if (index != -1) {
+            if (index != -1 && event == "enter") {
               containerController.containerList[index].zoneCode = zone;
+              containerController.currentZone.value = zone;
             }
           }
           containerController.containerList.refresh();
-
           Get.closeAllSnackbars();
           Get.snackbar(
             'zone event',

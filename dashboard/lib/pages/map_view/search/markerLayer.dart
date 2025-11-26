@@ -210,9 +210,7 @@ class _MarkerLayerState extends State<MarkerLayer> {
                             const Divider(),
                             CommonUi().detailRow(
                               "Location :",
-                              b.zoneCode != null
-                                  ? "${b.zoneCode}"
-                                  : "N/AN/AN/AN/AN/AN/AN/A",
+                              b.zoneCode != null ? "${b.zoneCode}" : "N/A",
                               Theme.of(context).colorScheme,
                             ),
                             CommonUi().horizontalDivider(height: 6),

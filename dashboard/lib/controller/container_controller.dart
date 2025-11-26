@@ -8,6 +8,7 @@ class ContainerController extends GetxController {
       <ContainerStateEventApiDTO>[].obs;
 
   final selectedContainerCode = ''.obs;
+  final currentZone = RxnString(); // nullable
 
   final showTrajector = false.obs;
 

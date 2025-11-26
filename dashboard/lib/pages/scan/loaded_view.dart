@@ -257,15 +257,16 @@ class _LoadedViewState extends State<LoadedView> {
                                         ),
                                       ),
                                       Obx(() {
-                                        final list =
-                                            containerController.containerList;
-                                        final zoneText = currentZone(
-                                          index,
-                                          list,
-                                        );
-
                                         return Text(
-                                          zoneText,
+                                          (containerController
+                                                      .currentZone
+                                                      .value
+                                                      ?.isNotEmpty ??
+                                                  false)
+                                              ? containerController
+                                                    .currentZone
+                                                    .value!
+                                              : 'N/A',
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w900,

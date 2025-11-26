@@ -33,6 +33,17 @@ class ContainerService {
           );
           print(containerController.containerList[0]);
         }
+        if (containerController.containerList.isNotEmpty) {
+          final index = containerController.containerList.indexWhere(
+            (c) => c.slamCoreId == homePageController.deviceId.value,
+          );
+          if (index != -1) {
+            containerController.currentZone.value =
+                containerController.containerList[index].zoneCode;
+          } else {
+            containerController.currentZone.value = null;
+          }
+        }
       } catch (e) {
         print(e);
       }

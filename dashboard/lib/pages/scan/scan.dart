@@ -175,12 +175,16 @@ class _ScanPageState extends State<ScanPage> {
                                     ),
                                   ),
                                   Obx(() {
-                                    final list =
-                                        containerController.containerList;
-                                    final zoneText = currentZone(index, list);
-
                                     return Text(
-                                      zoneText,
+                                      (containerController
+                                                  .currentZone
+                                                  .value
+                                                  ?.isNotEmpty ??
+                                              false)
+                                          ? containerController
+                                                .currentZone
+                                                .value!
+                                          : 'N/A',
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w900,
@@ -344,12 +348,6 @@ class _ScanPageState extends State<ScanPage> {
     _confirmOverlay = null;
   }
 
-  String currentZone(int? index, List<ContainerStateEventApiDTO> list) {
-    if (index == null || index < 0 || index >= list.length) return "N/A";
-    final z = list[index].zoneCode;
-    return (z == null || z.isEmpty) ? "N/A" : z;
-  }
-
   Timer? _debounce;
 
   @override
@@ -359,7 +357,6 @@ class _ScanPageState extends State<ScanPage> {
 
     return Scaffold(
       body: Obx(() {
-        final list = containerController.containerList;
         return SingleChildScrollView(
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
@@ -373,7 +370,10 @@ class _ScanPageState extends State<ScanPage> {
                 battery: 82,
               ),
               ScanScreen(
-                currentZone: currentZone(index, list),
+                currentZone:
+                    (containerController.currentZone.value?.isNotEmpty ?? false)
+                    ? containerController.currentZone.value!
+                    : 'N/A',
                 speed: 'N/A',
                 shiftTime: 'N/A',
               ),

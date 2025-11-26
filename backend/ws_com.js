@@ -106,12 +106,13 @@ async function handleZoneTransition(deviceId, prevZone, newZone, pose) {
     };
     await db.collection("zone_events").insertMany([exitEvent, enterEvent]);
     console.log(`🚨 Zone switched: ${prevZone.code} → ${newZone.code}`);
-    var transition = enterEvent;
+
+    transition = exitEvent;
     publisher.broadcast({
       type: "zone",
       transition,
     });
-    transition = exitEvent;
+    var transition = enterEvent;
     publisher.broadcast({
       type: "zone",
       transition,
