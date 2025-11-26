@@ -24,8 +24,8 @@ class SearchMapView extends StatefulWidget {
 
 class _SearchMapViewState extends State<SearchMapView> {
   final cfg = const MapConfig(
-    widthMeters: 150,
-    heightMeters: 150,
+    widthMeters: 280,
+    heightMeters: 280,
     marginMeters: 20,
     pxPerMeter: 1,
   );

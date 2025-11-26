@@ -43,19 +43,26 @@ class BinService {
     String binId,
     String status, {
     String deviceId = "FORKLIFT-001",
+    int? weightLbs = 10,
+    int? capacityLbs = 1000,
+    String? dwellTime = "4h 50m",
   }) async {
     try {
-      // bin id khali mt chod
+      final payload = {
+        "binId": binId,
+        "forkliftId": deviceId,
+        "status": status.toLowerCase(),
+        "weightLbs": weightLbs,
+        "capacityLbs": capacityLbs,
+        "dwellTime": dwellTime,
+      };
+
       var response = await http.post(
         Uri.parse("${Constants.baseApiUrilocal}/api/bins"),
         headers: {
           "Content-Type": "application/json", // important!
         },
-        body: jsonEncode({
-          "binId": binId,
-          "forkliftId": deviceId,
-          "status": status,
-        }),
+        body: jsonEncode(payload),
       );
       // if response is sucessful
       if (response.statusCode == 200) {
@@ -63,7 +70,7 @@ class BinService {
       } else {
         CommonWidgets().errorSnackbar(
           'Error',
-          'Unable to get bin  Data from server',
+          'Unable to send bin data (${response.statusCode})',
         );
       }
     } catch (e) {

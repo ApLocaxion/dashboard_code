@@ -1,0 +1,173 @@
+[
+  {
+    "binId": "BIN-401",
+    "status": "unload",
+    "forkliftId": "FORKLIFT-001",
+    "zoneCode": "OUTER",
+    "alloy": "6061",
+    "weightLbs": 1200,
+    "dwellTime": "2h 15m",
+    "origin": "Press Line 3",
+    "capacityLbs": 2500,
+    "position": {
+      "x": 53.9,
+      "y": 27.3,
+      "z": 1.1,
+      "timestamp": "2025-11-26T13:09:45.009Z"
+    },
+    "createdAt": "2025-11-26T13:10:57.659Z",
+    "updatedAt": "2025-11-26T13:10:59.157Z"
+  },
+  {
+    "binId": "BIN-402",
+    "status": "load",
+    "forkliftId": "FORKLIFT-004",
+    "zoneCode": "ZONE-A1",
+    "alloy": "5052",
+    "weightLbs": 850,
+    "dwellTime": "45m",
+    "origin": "Shear Line 1",
+    "capacityLbs": 2000,
+    "position": {
+      "x": 22.5,
+      "y": 14.1,
+      "z": 1.0,
+      "timestamp": "2025-11-26T12:55:21.120Z"
+    },
+    "createdAt": "2025-11-26T12:56:00.000Z",
+    "updatedAt": "2025-11-26T12:57:25.004Z"
+  },
+  {
+    "binId": "BIN-403",
+    "status": "unload",
+    "forkliftId": null,
+    "zoneCode": "MIDDLE",
+    "alloy": "7075",
+    "weightLbs": 1630,
+    "dwellTime": "3h 10m",
+    "origin": "Extrusion Bay",
+    "capacityLbs": 3000,
+    "position": {
+      "x": 41.2,
+      "y": 19.4,
+      "z": 1.1,
+      "timestamp": "2025-11-26T10:20:55.980Z"
+    },
+    "createdAt": "2025-11-26T10:21:00.000Z",
+    "updatedAt": "2025-11-26T10:23:11.001Z"
+  },
+  {
+    "binId": "BIN-404",
+    "status": "unload",
+    "forkliftId": "FORKLIFT-002",
+    "zoneCode": "OUTER",
+    "alloy": "3003",
+    "weightLbs": 420,
+    "dwellTime": "20m",
+    "origin": "QC Reject Area",
+    "capacityLbs": 1500,
+    "position": {
+      "x": 60.7,
+      "y": 32.2,
+      "z": 1.0,
+      "timestamp": "2025-11-26T13:15:09.880Z"
+    },
+    "createdAt": "2025-11-26T13:15:30.000Z",
+    "updatedAt": "2025-11-26T13:16:11.020Z"
+  },
+  {
+    "binId": "BIN-405",
+    "status": "load",
+    "forkliftId": "FORKLIFT-003",
+    "zoneCode": "ZONE-B3",
+    "alloy": "6063",
+    "weightLbs": 980,
+    "dwellTime": "1h 5m",
+    "origin": "Mill Entry",
+    "capacityLbs": 2500,
+    "position": {
+      "x": 15.8,
+      "y": 8.4,
+      "z": 1.2,
+      "timestamp": "2025-11-26T11:45:33.450Z"
+    },
+    "createdAt": "2025-11-26T11:46:00.000Z",
+    "updatedAt": "2025-11-26T11:47:01.000Z"
+  },
+  {
+    "binId": "BIN-406",
+    "status": "unload",
+    "forkliftId": null,
+    "zoneCode": "INNER",
+    "alloy": "5083",
+    "weightLbs": 2150,
+    "dwellTime": "4h 50m",
+    "origin": "Scrap Yard",
+    "capacityLbs": 3000,
+    "position": {
+      "x": 11.2,
+      "y": 4.5,
+      "z": 1.1,
+      "timestamp": "2025-11-26T09:10:25.102Z"
+    },
+    "createdAt": "2025-11-26T09:11:00.000Z",
+    "updatedAt": "2025-11-26T09:12:19.004Z"
+  },
+  {
+    "binId": "BIN-407",
+    "status": "unload",
+    "forkliftId": null,
+    "zoneCode": "INNER",
+    "alloy": "5083",
+    "weightLbs": 2150,
+    "dwellTime": "24h 50m",
+    "origin": "Scrap Yard",
+    "capacityLbs": 3000,
+    "position": {
+      "x": 11.2,
+      "y": 4.5,
+      "z": 1.1,
+      "timestamp": "2025-11-26T09:10:25.102Z"
+    },
+    "createdAt": "2025-11-26T09:11:00.000Z",
+    "updatedAt": "2025-11-26T09:12:19.004Z"
+  },
+  {
+    "binId": "BIN-408",
+    "status": "unload",
+    "forkliftId": null,
+    "zoneCode": "INNER",
+    "alloy": "5083",
+    "weightLbs": 0,
+    "dwellTime": "4h 50m",
+    "origin": "Scrap Yard",
+    "capacityLbs": 3000,
+    "position": {
+      "x": 11.2,
+      "y": 4.5,
+      "z": 1.1,
+      "timestamp": "2025-11-26T09:10:25.102Z"
+    },
+    "createdAt": "2025-11-26T09:11:00.000Z",
+    "updatedAt": "2025-11-26T09:12:19.004Z"
+  },
+  {
+    "binId": "BIN-409",
+    "status": "unload",
+    "forkliftId": null,
+    "zoneCode": "INNER",
+    "alloy": "5083",
+    "weightLbs": 0,
+    "dwellTime": "4h 50m",
+    "origin": "Scrap Yard",
+    "capacityLbs": 3000,
+    "position": {
+      "x": 11.2,
+      "y": 4.5,
+      "z": 1.1,
+      "timestamp": "2025-11-26T09:10:25.102Z"
+    },
+    "createdAt": "2025-10-26T09:11:00.000Z",
+    "updatedAt": "2025-11-26T09:12:19.004Z"
+  }
+]

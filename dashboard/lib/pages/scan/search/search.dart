@@ -185,7 +185,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
-                                                "bin.alloy",
+                                                "${bin.alloy}",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600,
@@ -202,7 +202,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              'WEIGHT',
+                                              bin.weightKg,
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w900,

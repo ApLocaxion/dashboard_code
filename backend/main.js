@@ -5,6 +5,7 @@ const {
   ensureDatabaseSchema,
   ensureLastPositionsData,
   ensureZonesData,
+  ensureBinsData,
 } = require("./database");
 const { MongoClient } = require("mongodb");
 
@@ -27,6 +28,7 @@ const { MongoClient } = require("mongodb");
     await ensureDatabaseSchema(db);
     await ensureZonesData(db);
     await ensureLastPositionsData(db);
+    await ensureBinsData(db);
 
     // Start WebSocket + zone system (pass db if you refactor ws_com to accept it)
     await init(db);

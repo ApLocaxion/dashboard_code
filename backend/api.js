@@ -189,6 +189,9 @@ app.post("/api/bins", async (req, res) => {
   try {
     console.log(req);
     const { binId, status, forkliftId } = req.body;
+    const weightLbsRaw = req.body.weightLbs;
+    const capacityLbsRaw = req.body.capacityLbs;
+    const dwellTime = req.body.dwellTime ?? null;
 
     if (!binId) return res.status(400).json({ error: "binId is required" });
     const normStatus = String(status || "").toLowerCase();
@@ -223,11 +226,17 @@ app.post("/api/bins", async (req, res) => {
 
     const matchedZone = position ? checkZones(position) : null;
 
+    const weightLbs = Number(weightLbsRaw);
+    const capacityLbs = Number(capacityLbsRaw);
+
     const set = {
       forkliftId: forkliftId ?? null,
       status: normStatus,
       position,
       zoneCode: matchedZone?.code ?? null,
+      weightLbs: Number.isFinite(weightLbs) ? weightLbs : null,
+      capacityLbs: Number.isFinite(capacityLbs) ? capacityLbs : null,
+      dwellTime,
     };
 
     const result = await db.collection("bins").findOneAndUpdate(

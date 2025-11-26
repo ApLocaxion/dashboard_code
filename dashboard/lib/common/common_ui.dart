@@ -158,7 +158,7 @@ class CommonUi {
               color: Colors.white,
             ),
           ),
-          const SizedBox(width: 100),
+          SizedBox(width: size / 7),
 
           // Right: Status pills + battery
           Row(

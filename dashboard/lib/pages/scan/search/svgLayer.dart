@@ -39,14 +39,15 @@ class _SvgLayerState extends State<SvgLayer> {
         final children = <Widget>[];
 
         final p0 = _toScreen(0, 0);
-        final imgSize = 140.0 * widget.zoom;
+        final imgWidth = 279 * widget.zoom;
+        final imgHeight = 288 * widget.zoom;
 
         children.add(
           Positioned(
             left: p0.dx,
-            top: p0.dy - imgSize,
-            width: imgSize,
-            height: imgSize,
+            top: p0.dy - imgWidth,
+            width: imgWidth,
+            height: imgHeight,
             child: IgnorePointer(
               child: SvgPicture.asset(
                 'ELVAL_SVG1.svg',

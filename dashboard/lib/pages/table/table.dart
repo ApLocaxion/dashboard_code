@@ -1,13 +1,11 @@
 import 'package:dashboard/common/common_ui.dart';
+import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
 import 'package:dashboard/models/bin_model.dart';
 import 'package:dashboard/pages/table/dashBoard.dart';
-import 'package:dashboard/pages/table/mock.dart';
 import 'package:dashboard/pages/table/summaryCard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../models/scra_bin.dart';
 
 class TableWid extends StatefulWidget {
   const TableWid({super.key});
@@ -40,6 +38,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
   final homePageController = Get.find<HomePageController>(
     tag: 'homePageController',
   );
+  final binController = Get.find<BinController>(tag: 'binController');
 
   final List<String> _filterOptions = [
     '> 24h Dwell',
@@ -47,27 +46,70 @@ class _BinReportScreenState extends State<BinReportScreen> {
     'Empty',
   ];
 
+  String _textOrNA(String? value) {
+    final trimmed = value?.trim() ?? '';
+    return trimmed.isNotEmpty ? trimmed : 'N/A';
+  }
+
+  int _intOrZero(int? value) => value ?? 0;
+
+  int _lbsToKg(int weightLbs) => (weightLbs * 0.453592).round();
+
+  String _formatWeight(int weightLbs) {
+    final safeWeight = _intOrZero(weightLbs);
+    return _showKg ? '${_lbsToKg(safeWeight)} kg' : '$safeWeight lbs';
+  }
+
+  int _safeDwellMinutes(String? dwellTime) {
+    if (dwellTime == null || dwellTime.isEmpty) return 0;
+    int mins = 0;
+    for (final part in dwellTime.split(' ')) {
+      final trimmed = part.trim();
+      if (trimmed.isEmpty) continue;
+      if (trimmed.endsWith('h')) {
+        final hours =
+            int.tryParse(trimmed.substring(0, trimmed.length - 1)) ?? 0;
+        mins += hours * 60;
+      } else if (trimmed.endsWith('m')) {
+        mins += int.tryParse(trimmed.substring(0, trimmed.length - 1)) ?? 0;
+      }
+    }
+    return mins;
+  }
+
+  double _safeFillPercentage(int weightLbs, int capacityLbs) {
+    final safeCapacity = capacityLbs <= 0 ? 1 : capacityLbs;
+    final pct = weightLbs / safeCapacity;
+    if (pct.isNaN || pct.isInfinite) return 0.0;
+    return pct.clamp(0.0, 1.0);
+  }
+
   // Filter and Sort bins
-  List<ScrapBin> get _filteredBins {
-    List<ScrapBin> list;
+  List<BinModel> get _filteredBins {
+    List<BinModel> list;
     if (_searchQuery.isEmpty && _activeFilters.isEmpty) {
-      list = List.from(mockBins);
+      list = List.from(binController.allBin);
     } else {
-      list = mockBins.where((bin) {
+      list = binController.allBin.where((bin) {
+        final id = _textOrNA(bin.binId).toLowerCase();
+        final alloy = _textOrNA(bin.alloy).toLowerCase();
+        final zone = _textOrNA(bin.zoneCode).toLowerCase();
+        final weightLbs = _intOrZero(bin.weightLbs);
+        final dwellMinutes = _safeDwellMinutes(bin.dwellTime);
+        final query = _searchQuery.toLowerCase();
+
         bool matchesSearch =
-            bin.id.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            bin.alloy.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            bin.zone.toLowerCase().contains(_searchQuery.toLowerCase());
+            id.contains(query) || alloy.contains(query) || zone.contains(query);
 
         bool matchesFilters = true;
         if (_activeFilters.contains('> 24h Dwell')) {
-          matchesFilters = matchesFilters && bin.dwellMinutes > 24 * 60;
+          matchesFilters = matchesFilters && dwellMinutes > 24 * 60;
         }
         if (_activeFilters.contains('Heavy (>2k lbs)')) {
-          matchesFilters = matchesFilters && bin.weightLbs > 2000;
+          matchesFilters = matchesFilters && weightLbs > 2000;
         }
         if (_activeFilters.contains('Empty')) {
-          matchesFilters = matchesFilters && bin.weightLbs == 0;
+          matchesFilters = matchesFilters && weightLbs == 0;
         }
 
         return matchesSearch && matchesFilters;
@@ -79,16 +121,20 @@ class _BinReportScreenState extends State<BinReportScreen> {
       int compareResult;
       switch (_sortColumnIndex) {
         case 0: // Bin ID
-          compareResult = a.id.compareTo(b.id);
+          compareResult = _textOrNA(a.binId).compareTo(_textOrNA(b.binId));
           break;
         case 1: // Alloy
-          compareResult = a.alloy.compareTo(b.alloy);
+          compareResult = _textOrNA(a.alloy).compareTo(_textOrNA(b.alloy));
           break;
         case 2: // Weight
-          compareResult = a.weightLbs.compareTo(b.weightLbs);
+          compareResult = _intOrZero(
+            a.weightLbs,
+          ).compareTo(_intOrZero(b.weightLbs));
           break;
         case 4: // Dwell Time
-          compareResult = a.dwellMinutes.compareTo(b.dwellMinutes);
+          compareResult = _safeDwellMinutes(
+            a.dwellTime,
+          ).compareTo(_safeDwellMinutes(b.dwellTime));
           break;
         default:
           compareResult = 0;
@@ -122,7 +168,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
     });
   }
 
-  void _showInspector(ScrapBin bin) {
+  void _showInspector(BinModel bin) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -140,7 +186,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Bin Inspector: ${bin.id}',
+                  'Bin Inspector: ${_textOrNA(bin.binId)}',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
@@ -155,13 +201,16 @@ class _BinReportScreenState extends State<BinReportScreen> {
             const SizedBox(height: 24),
             Row(
               children: [
-                _InspectorDetail('Alloy', bin.alloy),
+                _InspectorDetail('Alloy', _textOrNA(bin.alloy)),
                 const SizedBox(width: 32),
-                _InspectorDetail('Current Weight', '${bin.weightLbs} lbs'),
+                _InspectorDetail(
+                  'Current Weight',
+                  '${_intOrZero(bin.weightLbs)} lbs',
+                ),
                 const SizedBox(width: 32),
                 _InspectorDetail(
                   'Fill Level',
-                  '${(bin.fillPercentage * 100).toInt()}%',
+                  '${(_safeFillPercentage(_intOrZero(bin.weightLbs), _intOrZero(bin.capacityLbs)) * 100).toInt()}%',
                 ),
               ],
             ),
@@ -173,12 +222,12 @@ class _BinReportScreenState extends State<BinReportScreen> {
                 children: [
                   _HistoryItem(
                     time: '10:30 AM',
-                    event: 'Moved to ${bin.zone}',
+                    event: 'Moved to ${_textOrNA(bin.zoneCode)}',
                     user: 'Forklift 03',
                   ),
                   _HistoryItem(
                     time: '08:15 AM',
-                    event: 'Created at ${bin.origin}',
+                    event: 'Created at ${_textOrNA(bin.origin)}',
                     user: 'System',
                   ),
                 ],
@@ -194,328 +243,363 @@ class _BinReportScreenState extends State<BinReportScreen> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        CommonUi().globalHeader(
-          wifiOnline: true,
-          deviceId: homePageController.deviceId.value,
-          context: context,
-          rtlsActive: true,
-          battery: 82,
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Header Row
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        ///
-                        Get.back();
-                      },
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        padding: EdgeInsets.all(size.width / 50),
+    return Obx(() {
+      //
+      final _ = binController.allBin;
+      return Column(
+        children: [
+          CommonUi().globalHeader(
+            wifiOnline: true,
+            deviceId: homePageController.deviceId.value,
+            context: context,
+            rtlsActive: true,
+            battery: 82,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header Row
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          ///
+                          Get.back();
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: EdgeInsets.all(size.width / 50),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: colors.tertiary),
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: colors.onSurface,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: size.width / 42),
+                      Text(
+                        'Bin Inventory Report',
+                        style: TextStyle(
+                          fontSize: size.width / 34,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const Spacer(),
+                      // Export Button (New)
+                      IconButton(
+                        onPressed: () {
+                          /* Export Logic */
+                        },
+                        icon: Icon(
+                          Icons.share,
+                          color: colors.primary,
+                          size: size.width / 42,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Search Bar
+                      Container(
+                        width: 300,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        height: size.width / 22,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: colors.tertiary),
                         ),
-                        child: Icon(Icons.arrow_back, color: colors.onSurface),
-                      ),
-                    ),
-                    SizedBox(width: size.width / 42),
-                    Text(
-                      'Bin Inventory Report',
-                      style: TextStyle(
-                        fontSize: size.width / 34,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const Spacer(),
-                    // Export Button (New)
-                    IconButton(
-                      onPressed: () {
-                        /* Export Logic */
-                      },
-                      icon: Icon(
-                        Icons.share,
-                        color: colors.primary,
-                        size: size.width / 42,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Search Bar
-                    Container(
-                      width: 300,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: size.width / 22,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: colors.tertiary),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.search, color: colors.onSurfaceVariant),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: TextField(
-                              onChanged: (val) =>
-                                  setState(() => _searchQuery = val),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              decoration: const InputDecoration(
-                                hintText: 'Search Report...',
-                                border: InputBorder.none,
-                                hintStyle: TextStyle(color: Color(0xFFC7C7CC)),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search, color: colors.onSurfaceVariant),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (val) =>
+                                    setState(() => _searchQuery = val),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                decoration: const InputDecoration(
+                                  hintText: 'Search Report...',
+                                  border: InputBorder.none,
+                                  hintStyle: TextStyle(
+                                    color: Color(0xFFC7C7CC),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Unit Toggle Button
-                    Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE5E5EA),
-                        borderRadius: BorderRadius.circular(12),
+                      const SizedBox(width: 16),
+                      // Unit Toggle Button
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE5E5EA),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          children: [
+                            _UnitToggleOption(
+                              label: 'LBS',
+                              isSelected: !_showKg,
+                              onTap: () => setState(() => _showKg = false),
+                            ),
+                            _UnitToggleOption(
+                              label: 'KG',
+                              isSelected: _showKg,
+                              onTap: () => setState(() => _showKg = true),
+                            ),
+                          ],
+                        ),
                       ),
-                      padding: const EdgeInsets.all(4),
-                      child: Row(
-                        children: [
-                          _UnitToggleOption(
-                            label: 'LBS',
-                            isSelected: !_showKg,
-                            onTap: () => setState(() => _showKg = false),
-                          ),
-                          _UnitToggleOption(
-                            label: 'KG',
-                            isSelected: _showKg,
-                            onTap: () => setState(() => _showKg = true),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                // Filter Chips Row (New)
-                Row(
-                  children: [
-                    Text(
-                      'Quick Filters:',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: colors.onSurfaceVariant,
+                  // Filter Chips Row (New)
+                  Row(
+                    children: [
+                      Text(
+                        'Quick Filters:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: colors.onSurfaceVariant,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Wrap(
-                      spacing: 8,
-                      children: _filterOptions.map((filter) {
-                        final isSelected = _activeFilters.contains(filter);
-                        return FilterChip(
-                          label: Text(filter),
-                          selected: isSelected,
-                          onSelected: (_) => _toggleFilter(filter),
-                          backgroundColor: Colors.white,
-                          selectedColor: colors.primary.withValues(alpha: 0.2),
-                          labelStyle: TextStyle(
-                            color: isSelected
-                                ? colors.primary
-                                : colors.onSurface,
-                            fontWeight: FontWeight.bold,
-                            fontSize: size.width / 76,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(
+                      const SizedBox(width: 12),
+                      Wrap(
+                        spacing: 8,
+                        children: _filterOptions.map((filter) {
+                          final isSelected = _activeFilters.contains(filter);
+                          return FilterChip(
+                            label: Text(filter),
+                            selected: isSelected,
+                            onSelected: (_) => _toggleFilter(filter),
+                            backgroundColor: Colors.white,
+                            selectedColor: colors.primary.withValues(
+                              alpha: 0.2,
+                            ),
+                            labelStyle: TextStyle(
                               color: isSelected
                                   ? colors.primary
-                                  : colors.tertiary,
+                                  : colors.onSurface,
+                              fontWeight: FontWeight.bold,
+                              fontSize: size.width / 76,
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Summary Metrics Row
-                Row(
-                  children: [
-                    SummaryCard(
-                      label: 'TOTAL BINS',
-                      value: '${_filteredBins.length}',
-                      icon: Icons.inventory_2_outlined,
-                    ),
-                    const SizedBox(width: 16),
-                    SummaryCard(
-                      label: 'TOTAL WEIGHT',
-                      value: _calculateTotalWeight(),
-                      icon: Icons.scale_outlined,
-                    ),
-                    const SizedBox(width: 16),
-                    SummaryCard(
-                      label: 'AVG DWELL TIME',
-                      value: '3h 12m',
-                      icon: Icons.timer_outlined,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Report Table Container
-                Expanded(
-                  child: DashboardCard(
-                    padding: const EdgeInsets.all(0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: Column(
-                        children: [
-                          // Table Header with Sort
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32,
-                              vertical: 24,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                color: isSelected
+                                    ? colors.primary
+                                    : colors.tertiary,
+                              ),
                             ),
-                            color: const Color(0xFFF9FAFB),
-                            child: Row(
-                              children: [
-                                _buildSortableHeader('BIN ID', 0, flex: 2),
-                                _buildSortableHeader('ALLOY GRADE', 1, flex: 3),
-                                _buildSortableHeader(
-                                  'WEIGHT (${_showKg ? 'KG' : 'LBS'})',
-                                  2,
-                                  flex: 2,
-                                ),
-                                _buildHeaderCell(
-                                  'LOCATION',
-                                  flex: 3,
-                                ), // Not sortable for now
-                                _buildSortableHeader('DWELL TIME', 4, flex: 2),
-                                _buildHeaderCell(
-                                  'ORIGIN',
-                                  flex: 3,
-                                ), // Not sortable for now
-                              ],
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Summary Metrics Row
+                  Row(
+                    children: [
+                      SummaryCard(
+                        label: 'TOTAL BINS',
+                        value: '${_filteredBins.length}',
+                        icon: Icons.inventory_2_outlined,
+                      ),
+                      const SizedBox(width: 16),
+                      SummaryCard(
+                        label: 'TOTAL WEIGHT',
+                        value: _calculateTotalWeight(),
+                        icon: Icons.scale_outlined,
+                      ),
+                      const SizedBox(width: 16),
+                      SummaryCard(
+                        label: 'AVG DWELL TIME',
+                        value: '3h 12m',
+                        icon: Icons.timer_outlined,
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Report Table Container
+                  Expanded(
+                    child: DashboardCard(
+                      padding: const EdgeInsets.all(0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Column(
+                          children: [
+                            // Table Header with Sort
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32,
+                                vertical: 24,
+                              ),
+                              color: const Color(0xFFF9FAFB),
+                              child: Row(
+                                children: [
+                                  _buildSortableHeader('BIN ID', 0, flex: 2),
+                                  _buildSortableHeader(
+                                    'ALLOY GRADE',
+                                    1,
+                                    flex: 3,
+                                  ),
+                                  _buildSortableHeader(
+                                    'WEIGHT (${_showKg ? 'KG' : 'LBS'})',
+                                    2,
+                                    flex: 2,
+                                  ),
+                                  _buildHeaderCell(
+                                    'LOCATION',
+                                    flex: 3,
+                                  ), // Not sortable for now
+                                  _buildSortableHeader(
+                                    'DWELL TIME',
+                                    4,
+                                    flex: 2,
+                                  ),
+                                  _buildHeaderCell(
+                                    'ORIGIN',
+                                    flex: 3,
+                                  ), // Not sortable for now
+                                ],
+                              ),
                             ),
-                          ),
-                          Divider(height: 1, color: colors.tertiary),
+                            Divider(height: 1, color: colors.tertiary),
 
-                          // Table Body (Scrollable List)
-                          Expanded(
-                            child: ListView.separated(
-                              itemCount: _filteredBins.length,
-                              separatorBuilder: (context, index) =>
-                                  Divider(height: 1, color: colors.tertiary),
-                              itemBuilder: (context, index) {
-                                final bin = _filteredBins[index];
-                                final weightDisplay = _showKg
-                                    ? '${bin.weightKg} kg'
-                                    : '${bin.weightLbsStr} lbs';
+                            // Table Body (Scrollable List)
+                            Expanded(
+                              child: ListView.separated(
+                                itemCount: _filteredBins.length,
+                                separatorBuilder: (context, index) =>
+                                    Divider(height: 1, color: colors.tertiary),
+                                itemBuilder: (context, index) {
+                                  final bin = _filteredBins[index];
+                                  final safeId = _textOrNA(bin.binId);
+                                  final safeAlloy = _textOrNA(bin.alloy);
+                                  final safeZone = _textOrNA(bin.zoneCode);
+                                  final safeOrigin = _textOrNA(bin.origin);
+                                  final safeDwellTime = _textOrNA(
+                                    bin.dwellTime,
+                                  );
+                                  final weightLbs = _intOrZero(bin.weightLbs);
+                                  final capacityLbs = _intOrZero(
+                                    bin.capacityLbs,
+                                  );
+                                  final weightDisplay = _formatWeight(
+                                    weightLbs,
+                                  );
+                                  final fillPercentage = _safeFillPercentage(
+                                    weightLbs,
+                                    capacityLbs,
+                                  );
+                                  final dwellMinutes = _safeDwellMinutes(
+                                    bin.dwellTime,
+                                  );
+                                  final isLongDwell = dwellMinutes > 24 * 60;
 
-                                // Highlight long dwell times
-                                final isLongDwell = bin.dwellMinutes > 24 * 60;
-
-                                return InkWell(
-                                  onTap: () => _showInspector(bin),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 16,
-                                    ), // Reduced vertical padding
-                                    color: index % 2 == 0
-                                        ? Colors.white
-                                        : const Color(0xFFFCFDFF),
-                                    child: Row(
-                                      children: [
-                                        _buildDataCell(
-                                          bin.id,
-                                          flex: 2,
-                                          isBold: true,
-                                        ),
-                                        // Alloy Badge Logic
-                                        Expanded(
-                                          flex: 3,
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: _AlloyBadge(
-                                              alloy: bin.alloy,
+                                  return InkWell(
+                                    onTap: () => _showInspector(bin),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 32,
+                                        vertical: 16,
+                                      ), // Reduced vertical padding
+                                      color: index % 2 == 0
+                                          ? Colors.white
+                                          : const Color(0xFFFCFDFF),
+                                      child: Row(
+                                        children: [
+                                          _buildDataCell(
+                                            safeId,
+                                            flex: 2,
+                                            isBold: true,
+                                          ),
+                                          // Alloy Badge Logic
+                                          Expanded(
+                                            flex: 3,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: _AlloyBadge(
+                                                alloy: safeAlloy,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        // Weight with Fill Indicator
-                                        Expanded(
-                                          flex: 2,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                weightDisplay,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 16,
+                                          // Weight with Fill Indicator
+                                          Expanded(
+                                            flex: 2,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  weightDisplay,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              _FillIndicator(
-                                                percentage: bin.fillPercentage,
-                                              ),
-                                            ],
+                                                const SizedBox(height: 4),
+                                                _FillIndicator(
+                                                  percentage: fillPercentage,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        _buildDataCell(bin.zone, flex: 3),
-                                        _buildDataCell(
-                                          bin.dwellTime,
-                                          flex: 2,
-                                          color: isLongDwell
-                                              ? colors.error
-                                              : colors.onSurfaceVariant,
-                                          isBold: isLongDwell,
-                                        ),
-                                        _buildDataCell(bin.origin, flex: 3),
-                                      ],
+                                          _buildDataCell(safeZone, flex: 3),
+                                          _buildDataCell(
+                                            safeDwellTime,
+                                            flex: 2,
+                                            color: isLongDwell
+                                                ? colors.error
+                                                : colors.onSurfaceVariant,
+                                            isBold: isLongDwell,
+                                          ),
+                                          _buildDataCell(safeOrigin, flex: 3),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   String _calculateTotalWeight() {
-    int totalLbs = _filteredBins.fold(0, (sum, bin) => sum + bin.weightLbs);
-    if (_showKg) {
-      return '${(totalLbs * 0.453592).round()} kg';
-    }
-    return '$totalLbs lbs';
+    final totalLbs = _filteredBins.fold(
+      0,
+      (sum, bin) => sum + _intOrZero(bin.weightLbs),
+    );
+    return _formatWeight(totalLbs);
   }
 
   Widget _buildSortableHeader(String text, int index, {required int flex}) {
@@ -552,12 +636,13 @@ class _BinReportScreenState extends State<BinReportScreen> {
 
   Widget _buildHeaderCell(String text, {required int flex}) {
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Expanded(
       flex: flex,
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 13,
+          fontSize: size.width / 78,
           fontWeight: FontWeight.w900,
           color: colors.onSurfaceVariant,
           letterSpacing: 1.2,

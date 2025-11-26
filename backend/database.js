@@ -7,7 +7,7 @@ async function ensureDatabaseSchema(db) {
       validator: {
         $jsonSchema: {
           bsonType: "object",
-          required: ["binId", "updatedAt"],
+          required: ["binId", "updatedAt", "weightLbs", "capacityLbs", "dwellTime"],
           properties: {
             binId: { bsonType: "string" },
 
@@ -33,6 +33,17 @@ async function ensureDatabaseSchema(db) {
 
             // your code uses matchedZone?.code ?? null
             zoneCode: { bsonType: ["string", "null"] },
+
+            // optional metadata
+            alloy: { bsonType: ["string", "null"] },
+            origin: { bsonType: ["string", "null"] },
+            dwellTime: { bsonType: ["string", "null"] },
+            weightLbs: {
+              bsonType: ["int", "long", "double", "decimal", "null"],
+            },
+            capacityLbs: {
+              bsonType: ["int", "long", "double", "decimal", "null"],
+            },
 
             updatedAt: { bsonType: "date" },
             createdAt: { bsonType: "date" },
@@ -265,8 +276,107 @@ async function ensureZonesData(db) {
   }
 }
 
+async function ensureBinsData(db) {
+  try {
+    const binsCollection = db.collection("bins");
+    const binsFile = path.join(__dirname, "bins.json");
+
+    if (!fs.existsSync(binsFile)) {
+      console.warn("�s��,? bins.json not found, skipping bin import.");
+      return;
+    }
+
+    const binsData = JSON.parse(fs.readFileSync(binsFile, "utf8"));
+
+    if (!Array.isArray(binsData)) {
+      console.error("�?O Invalid bins.json: expected an array.");
+      return;
+    }
+
+    let upserted = 0;
+    for (const bin of binsData) {
+      if (!bin.binId) {
+        console.warn(`�s��,? Skipping invalid bin entry: ${JSON.stringify(bin)}`);
+        continue;
+      }
+
+      const status = bin.status ? String(bin.status).toLowerCase() : undefined;
+      if (status && !["load", "unload"].includes(status)) {
+        console.warn(
+          `�s��,? Skipping bin with invalid status: ${JSON.stringify(bin)}`
+        );
+        continue;
+      }
+
+      const hasValidPosition =
+        bin.position &&
+        ["x", "y", "z"].every((axis) =>
+          Number.isFinite(Number(bin.position[axis]))
+        );
+
+      if (bin.position && !hasValidPosition) {
+        console.warn(
+          `�s��,? Skipping bin position with invalid coordinates: ${JSON.stringify(
+            bin.position
+          )}`
+        );
+      }
+
+      const position = hasValidPosition
+        ? {
+            x: Number(bin.position.x),
+            y: Number(bin.position.y),
+            z: Number(bin.position.z),
+            timestamp: bin.position.timestamp
+              ? new Date(bin.position.timestamp)
+              : new Date(),
+          }
+        : null;
+
+      const updatedAt = bin.updatedAt ? new Date(bin.updatedAt) : new Date();
+      const createdAt = bin.createdAt ? new Date(bin.createdAt) : updatedAt;
+
+      const weightLbs = Number(bin.weightLbs);
+      const capacityLbs = Number(bin.capacityLbs);
+
+      const setDoc = {
+        forkliftId: bin.forkliftId ?? null,
+        position,
+        zoneCode: bin.zoneCode ?? null,
+        updatedAt,
+        alloy: bin.alloy ?? null,
+        origin: bin.origin ?? null,
+        dwellTime: bin.dwellTime ?? null,
+        weightLbs: Number.isFinite(weightLbs) ? weightLbs : null,
+        capacityLbs: Number.isFinite(capacityLbs) ? capacityLbs : null,
+      };
+
+      if (status) setDoc.status = status;
+
+      const result = await binsCollection.updateOne(
+        { binId: bin.binId },
+        {
+          $set: setDoc,
+          $setOnInsert: { binId: bin.binId, createdAt },
+        },
+        { upsert: true }
+      );
+
+      if (result.upsertedCount > 0) upserted++;
+    }
+
+    const total = binsData.length;
+    console.log(
+      `�o. Bins sync complete. ${upserted} new or updated, total ${total} defined.`
+    );
+  } catch (err) {
+    console.error("�?O Error ensuring bins data:", err);
+  }
+}
+
 module.exports = {
   ensureDatabaseSchema,
   ensureZonesData,
   ensureLastPositionsData,
+  ensureBinsData,
 };
