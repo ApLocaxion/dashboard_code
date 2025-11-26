@@ -6,6 +6,7 @@ import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
 import 'package:dashboard/models/bin_model.dart';
+import 'package:dashboard/models/container_event.dart';
 import 'package:dashboard/service/container_api_service.dart';
 import 'package:dashboard/utility/constant.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class LoadedView extends StatefulWidget {
-  final String binId;
-
-  const LoadedView({super.key, required this.binId});
+  const LoadedView({super.key});
 
   @override
   State<LoadedView> createState() => _LoadedViewState();
@@ -47,9 +46,9 @@ class _LoadedViewState extends State<LoadedView> {
     load();
   }
 
-  String currentZone(index) {
-    if (index == null || index == -1) return "N/A";
-    final z = containerController.containerList[index].zoneCode;
+  String currentZone(int? index, List<ContainerStateEventApiDTO> list) {
+    if (index == null || index < 0 || index >= list.length) return "N/A";
+    final z = list[index].zoneCode;
     return (z == null || z.isEmpty) ? "N/A" : z;
   }
 
@@ -257,16 +256,25 @@ class _LoadedViewState extends State<LoadedView> {
                                           letterSpacing: 1.8,
                                         ),
                                       ),
-                                      Text(
-                                        currentZone(index),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w900,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurface,
-                                        ),
-                                      ),
+                                      Obx(() {
+                                        final list =
+                                            containerController.containerList;
+                                        final zoneText = currentZone(
+                                          index,
+                                          list,
+                                        );
+
+                                        return Text(
+                                          zoneText,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w900,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
+                                          ),
+                                        );
+                                      }),
                                     ],
                                   ),
                                   const SizedBox(width: 8),

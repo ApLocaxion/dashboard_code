@@ -18,10 +18,7 @@ appRoutes() => [
   GetPage(name: "/dashboard", page: () => const Dashboard()),
   GetPage(name: "/searchScreen", page: () => const SearchScreen()),
   GetPage(name: "/table", page: () => const TableWid()),
-  GetPage(
-    name: "/load",
-    page: () => const LoadedView(binId: ''),
-  ),
+  GetPage(name: "/load", page: () => const LoadedView()),
   // GetPage(
   //   name: '/editDeviceDetails',
   //   page: () => EditDeviceDetailsPage(mode: '', title: ''),

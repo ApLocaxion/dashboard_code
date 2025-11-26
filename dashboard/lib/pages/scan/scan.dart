@@ -5,6 +5,7 @@ import 'package:dashboard/common/common_widgets.dart';
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
+import 'package:dashboard/models/container_event.dart';
 import 'package:dashboard/service/bin_service.dart';
 import 'package:dashboard/pages/scan/ready.dart';
 import 'package:dashboard/service/container_api_service.dart';
@@ -115,6 +116,7 @@ class _ScanPageState extends State<ScanPage> {
 
   @override
   void initState() {
+    super.initState();
     load();
   }
 
@@ -172,16 +174,22 @@ class _ScanPageState extends State<ScanPage> {
                                       letterSpacing: 1.8,
                                     ),
                                   ),
-                                  Text(
-                                    currentZone(index),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900,
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onSurface,
-                                    ),
-                                  ),
+                                  Obx(() {
+                                    final list =
+                                        containerController.containerList;
+                                    final zoneText = currentZone(index, list);
+
+                                    return Text(
+                                      zoneText,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w900,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface,
+                                      ),
+                                    );
+                                  }),
                                 ],
                               ),
                               const SizedBox(width: 8),
@@ -336,9 +344,9 @@ class _ScanPageState extends State<ScanPage> {
     _confirmOverlay = null;
   }
 
-  String currentZone(index) {
-    if (index == null || index == -1) return "N/A";
-    final z = containerController.containerList[index].zoneCode;
+  String currentZone(int? index, List<ContainerStateEventApiDTO> list) {
+    if (index == null || index < 0 || index >= list.length) return "N/A";
+    final z = list[index].zoneCode;
     return (z == null || z.isEmpty) ? "N/A" : z;
   }
 
@@ -350,8 +358,9 @@ class _ScanPageState extends State<ScanPage> {
     final useAutofocus = !_isDesktopWeb;
 
     return Scaffold(
-      body: Obx(
-        () => SingleChildScrollView(
+      body: Obx(() {
+        final list = containerController.containerList;
+        return SingleChildScrollView(
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -364,7 +373,7 @@ class _ScanPageState extends State<ScanPage> {
                 battery: 82,
               ),
               ScanScreen(
-                currentZone: currentZone(index),
+                currentZone: currentZone(index, list),
                 speed: 'N/A',
                 shiftTime: 'N/A',
               ),
@@ -419,60 +428,13 @@ class _ScanPageState extends State<ScanPage> {
 
                                     onChanged: (value) {
                                       _focusNode.requestFocus();
-                                      if (homePageController
-                                          .manualEntry
-                                          .value) {
-                                        //
-                                        final upper = value.toUpperCase();
-                                        if (value != upper) {
-                                          _controller.value = _controller.value
-                                              .copyWith(
-                                                text: upper,
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                      offset: upper.length,
-                                                    ),
-                                              );
-                                        }
-                                        binController.scanedBin.value = value
-                                            .toUpperCase();
-                                      } else {
-                                        _debounce
-                                            ?.cancel(); // Cancel previous timer
-                                        _debounce = Timer(
-                                          Duration(milliseconds: 50),
-                                          () {
-                                            if (value ==
-                                                binController.scanedBin.value) {
-                                              return;
-                                            }
-                                            if (homePageController.scan.value) {
-                                              binController.scanedBin.value =
-                                                  '';
-                                              final upper = value.toUpperCase();
-                                              if (value != upper) {
-                                                _controller.value = _controller
-                                                    .value
-                                                    .copyWith(
-                                                      text: upper,
-                                                      selection:
-                                                          TextSelection.collapsed(
-                                                            offset:
-                                                                upper.length,
-                                                          ),
-                                                    );
-                                              }
-                                              binController.scanedBin.value =
-                                                  value.toUpperCase();
-                                              _controller.clear();
-                                            }
-                                          },
-                                        );
-                                      }
                                     },
                                     onFieldSubmitted: (value) {
+                                      binController.scanedBin.value = value
+                                          .toUpperCase();
                                       _showConfirmOverlay();
                                       _focusNode.requestFocus();
+                                      _controller.clear();
                                     },
                                     cursorColor:
                                         Colors.black, // or a brand color
@@ -531,8 +493,9 @@ class _ScanPageState extends State<ScanPage> {
                                     ),
                                     onTap: () {
                                       // If user taps field while keyboard is visible, keep focus
-                                      if (_showVirtualKeyboard)
+                                      if (_showVirtualKeyboard) {
                                         _focusNode.requestFocus();
+                                      }
                                     },
                                   ),
                                 ),
@@ -631,8 +594,8 @@ class _ScanPageState extends State<ScanPage> {
                 ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

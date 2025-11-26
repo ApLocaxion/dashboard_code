@@ -201,7 +201,7 @@ class _MarkerLayerState extends State<MarkerLayer> {
                         child: Column(
                           children: [
                             Text(
-                              "BIN DETAILS",
+                              b.binId,
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w700,

@@ -18,14 +18,7 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focus = FocusNode();
   bool scannerReady = true;
-
-  void _submitManual() {
-    if (_controller.text.trim().isEmpty) return;
-    final id = _controller.text.trim().toUpperCase();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,18 +142,22 @@ class _ScanScreenState extends State<ScanScreen> {
                                 size: 26,
                               ),
                               const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  widget.currentZone,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: size.height / 18,
-                                    fontWeight: FontWeight.w900,
+                              Builder(
+                                builder: (context) {
+                                  return Flexible(
+                                    child: Text(
+                                      widget.currentZone,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: size.height / 18,
+                                        fontWeight: FontWeight.w900,
 
-                                    color: colors.primary,
-                                  ),
-                                ),
+                                        color: colors.primary,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
