@@ -86,7 +86,7 @@
   {
     "zoneId": 4,
     "code": "td 11",
-    "hasChild": true,
+    "hasChild": false,
     "chlidId": [5],
     "active": true,
     "title": "t o0",
@@ -110,8 +110,8 @@
   {
     "zoneId": 10,
     "code": "PLANT",
-    "hasChild": false,
-    "chlidId": [],
+    "hasChild": true,
+    "chlidId": [11],
     "active": true,
     "title": "Plant",
     "description": "Full plant boundary",
@@ -122,8 +122,8 @@
   {
     "zoneId": 11,
     "code": "TANDEM",
-    "hasChild": false,
-    "chlidId": [],
+    "hasChild": true,
+    "chlidId": [1,2,3,6,7],
     "active": true,
     "title": "Tandem",
     "description": "Tandem area",
