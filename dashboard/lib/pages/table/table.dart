@@ -193,11 +193,11 @@ class _BinReportScreenState extends State<BinReportScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Column(
       children: [
         CommonUi().globalHeader(
           wifiOnline: true,
-
           deviceId: homePageController.deviceId.value,
           context: context,
           rtlsActive: true,
@@ -215,10 +215,11 @@ class _BinReportScreenState extends State<BinReportScreen> {
                     InkWell(
                       onTap: () {
                         ///
+                        Get.back();
                       },
                       borderRadius: BorderRadius.circular(16),
                       child: Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(size.width / 50),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
@@ -227,11 +228,11 @@ class _BinReportScreenState extends State<BinReportScreen> {
                         child: Icon(Icons.arrow_back, color: colors.onSurface),
                       ),
                     ),
-                    const SizedBox(width: 24),
-                    const Text(
+                    SizedBox(width: size.width / 42),
+                    Text(
                       'Bin Inventory Report',
                       style: TextStyle(
-                        fontSize: 36,
+                        fontSize: size.width / 34,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -241,14 +242,18 @@ class _BinReportScreenState extends State<BinReportScreen> {
                       onPressed: () {
                         /* Export Logic */
                       },
-                      icon: Icon(Icons.share, color: colors.primary, size: 28),
+                      icon: Icon(
+                        Icons.share,
+                        color: colors.primary,
+                        size: size.width / 42,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     // Search Bar
                     Container(
                       width: 300,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: 48,
+                      height: size.width / 22,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
@@ -269,7 +274,6 @@ class _BinReportScreenState extends State<BinReportScreen> {
                                 hintText: 'Search Report...',
                                 border: InputBorder.none,
                                 hintStyle: TextStyle(color: Color(0xFFC7C7CC)),
-                                contentPadding: EdgeInsets.only(bottom: 12),
                               ),
                             ),
                           ),
@@ -330,6 +334,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
                                 ? colors.primary
                                 : colors.onSurface,
                             fontWeight: FontWeight.bold,
+                            fontSize: size.width / 76,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -517,6 +522,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
     final isSelected = _sortColumnIndex == index;
 
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Expanded(
       flex: flex,
       child: InkWell(
@@ -526,7 +532,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
             Text(
               text,
               style: TextStyle(
-                fontSize: 13,
+                fontSize: size.width / 78,
                 fontWeight: FontWeight.w900,
                 color: isSelected ? colors.primary : colors.onSurfaceVariant,
                 letterSpacing: 1.2,
@@ -568,12 +574,13 @@ class _BinReportScreenState extends State<BinReportScreen> {
     bool? isBoldOverride,
   }) {
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Expanded(
       flex: flex,
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 16,
+          fontSize: size.width / 70,
           fontWeight: (isBoldOverride ?? isBold)
               ? FontWeight.w800
               : FontWeight.w600,

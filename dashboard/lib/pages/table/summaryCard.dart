@@ -14,6 +14,7 @@ class SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final size = MediaQuery.of(context).size;
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -37,7 +38,11 @@ class SummaryCard extends StatelessWidget {
                 color: colors.tertiary,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: colors.onSurfaceVariant, size: 24),
+              child: Icon(
+                icon,
+                color: colors.onSurfaceVariant,
+                size: size.width / 42,
+              ),
             ),
             const SizedBox(width: 16),
             Column(
@@ -46,7 +51,7 @@ class SummaryCard extends StatelessWidget {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: size.width / 90,
                     fontWeight: FontWeight.w800,
                     color: colors.onSurfaceVariant,
                     letterSpacing: 0.5,
@@ -55,7 +60,7 @@ class SummaryCard extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: size.width / 50,
                     fontWeight: FontWeight.w900,
                     color: colors.onSurface,
                     letterSpacing: -0.5,

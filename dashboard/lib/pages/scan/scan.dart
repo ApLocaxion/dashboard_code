@@ -599,7 +599,7 @@ class _ScanPageState extends State<ScanPage> {
                                     _debounce
                                         ?.cancel(); // Cancel previous timer
                                     _debounce = Timer(
-                                      Duration(milliseconds: 500),
+                                      Duration(milliseconds: 100),
                                       () {
                                         if (value ==
                                             binController.scanedBin.value) {
