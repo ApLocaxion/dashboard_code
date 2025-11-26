@@ -1,3 +1,4 @@
+import 'package:dashboard/common/env.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
@@ -39,8 +40,8 @@ class _SvgLayerState extends State<SvgLayer> {
         final children = <Widget>[];
 
         final p0 = _toScreen(0, 0);
-        final imgWidth = 279 * widget.zoom;
-        final imgHeight = 288 * widget.zoom;
+        final imgWidth = Env.cfg.heightMeters * widget.zoom;
+        final imgHeight = Env.cfg.widthMeters * widget.zoom;
 
         children.add(
           Positioned(

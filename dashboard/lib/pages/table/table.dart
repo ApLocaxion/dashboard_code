@@ -373,6 +373,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: colors.onSurfaceVariant,
+                          fontSize: size.width / 82,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -393,7 +394,7 @@ class _BinReportScreenState extends State<BinReportScreen> {
                                   ? colors.primary
                                   : colors.onSurface,
                               fontWeight: FontWeight.bold,
-                              fontSize: size.width / 76,
+                              fontSize: size.width / 82,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),

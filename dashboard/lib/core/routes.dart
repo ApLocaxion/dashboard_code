@@ -15,9 +15,8 @@ appRoutes() => [
   GetPage(name: "/areaView", page: () => const AreaMapView()),
   GetPage(name: "/simulate", page: () => const SimulateView()),
   GetPage(name: "/scan", page: () => const ScanPage()),
-  GetPage(name: "/dashboard", page: () => const Dashboard()),
+  GetPage(name: "/dashboard", page: () => const TableWid()),
   GetPage(name: "/searchScreen", page: () => const SearchScreen()),
-  GetPage(name: "/table", page: () => const TableWid()),
   GetPage(name: "/load", page: () => const LoadedView()),
   // GetPage(
   //   name: '/editDeviceDetails',

@@ -155,6 +155,7 @@ class _ZoneLayer extends CustomPainter {
                 .stroke // Or PaintingStyle.fill for a filled pentagon
             ..strokeWidth = 3.0,
         );
+
         // path.
       }
     } catch (e) {

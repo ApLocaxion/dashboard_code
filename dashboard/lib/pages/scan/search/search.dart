@@ -1,4 +1,5 @@
 import 'package:dashboard/common/common_ui.dart';
+import 'package:dashboard/common/env.dart';
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/home_controller.dart';
 import 'package:dashboard/controller/map_controller.dart';
@@ -143,7 +144,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           mapController.panPx.value.dx;
                                       final yImg = (ym - origin) * z;
                                       final heightPx =
-                                          (150 + 2 * 20) *
+                                          (Env.cfg.heightMeters + 2 * 20) *
                                           z; // width/height + margins
                                       final yPx =
                                           (heightPx - yImg) +
@@ -166,6 +167,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       vertical: 14,
                                     ),
                                     child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
                                           child: Column(
@@ -185,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
-                                                "${bin.alloy}",
+                                                "ALLOY:${bin.alloy}",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w600,
@@ -199,10 +202,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
-                                          mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              bin.weightKg,
+                                              "W: ${bin.weightKg}",
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w900,
@@ -212,7 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
-                                              "bin.weight",
+                                              "${bin.zoneCode}",
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w700,
