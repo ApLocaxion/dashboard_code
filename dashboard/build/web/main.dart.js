@@ -44962,7 +44962,7 @@ kk(){var s=0,r=A.Q(t.z),q,p=this,o,n,m,l,k
 var $async$kk=A.M(function(a,b){if(a===1)return A.N(b,r)
 while(true)switch(s){case 0:l=t.N
 s=3
-return A.T(A.a2p(A.eh("http://localhost:3000/api/bins?binId="+p.d.cx.gm(),0,null),A.av(["Content-type","Application/json"],l,l)),$async$kk)
+return A.T(A.a2p(A.eh("http://192.168.120.126:3000/api/bins?binId="+p.d.cx.gm(),0,null),A.av(["Content-type","Application/json"],l,l)),$async$kk)
 case 3:k=b
 if(k.b===200){o=B.bn.or(A.a2n(A.a29(k.e)).e1(k.w),null)
 try{p.r=A.aGC(J.bJ(o,0))}catch(j){n=A.ai(j)
@@ -45853,7 +45853,7 @@ kk(){var s=0,r=A.Q(t.z),q=this,p,o,n,m,l,k,j,i,h
 var $async$kk=A.M(function(a,b){if(a===1)return A.N(b,r)
 while(true)switch(s){case 0:i=t.N
 s=2
-return A.T(A.a2p(A.eh("http://localhost:3000/api/bins",0,null),A.av(["Content-type","Application/json"],i,i)),$async$kk)
+return A.T(A.a2p(A.eh("http://192.168.120.126:3000/api/bins",0,null),A.av(["Content-type","Application/json"],i,i)),$async$kk)
 case 2:h=b
 if(h.b===200){i=q.a.ax
 i.sF(0,0)
@@ -45876,7 +45876,7 @@ g=10
 q=3
 l=t.N
 o=A.av(["binId",a,"forkliftId",c,"status",b.toLowerCase(),"weightLbs",g,"capacityLbs",i,"dwellTime",h],l,t.X)
-k=A.eh("http://localhost:3000/api/bins",0,null)
+k=A.eh("http://192.168.120.126:3000/api/bins",0,null)
 l=A.av(["Content-Type","application/json"],l,l)
 s=6
 return A.T(A.aNL(k,B.bn.IA(o,null),l),$async$vZ)
@@ -45901,7 +45901,7 @@ pH(){var s=0,r=A.Q(t.z),q=this,p,o,n,m,l,k,j,i,h,g,f,e,d
 var $async$pH=A.M(function(a,b){if(a===1)return A.N(b,r)
 while(true)switch(s){case 0:e=t.N
 s=2
-return A.T(A.a2p(A.eh("http://localhost:3000/api/last_position",0,null),A.av(["Content-type","Application/json"],e,e)),$async$pH)
+return A.T(A.a2p(A.eh("http://192.168.120.126:3000/api/last_position",0,null),A.av(["Content-type","Application/json"],e,e)),$async$pH)
 case 2:d=b
 if(d.b===200){e=q.a
 l=e.ax
@@ -45939,7 +45939,7 @@ o=j[0]
 n=m.p2$
 n===$&&A.a()
 J.eX(n,new A.js(k,p,null,o.a,o.b,null))
-m.R8$.eY(m.gm())}m=A.eh("http://localhost:3000/api/simulate",0,null)
+m.R8$.eY(m.gm())}m=A.eh("http://192.168.120.126:3000/api/simulate",0,null)
 k=t.N
 p=A.av(["Content-Type","application/json"],k,k)
 s=2
@@ -45974,7 +45974,7 @@ if(p==null)p=$.al=B.z
 p=p.bJ("containerController",t.sT)
 q=$.al
 if(q==null)q=$.al=B.z
-new A.aoa(p,q.bJ("webSocketController",t.KS)).anH("ws://localhost:8081")
+new A.aoa(p,q.bJ("webSocketController",t.KS)).anH("ws://192.168.120.126:8081")
 q=t.dw
 p=$.al
 p=new A.Tq((p==null?$.al=B.z:p).bJ("zoneController",q)).wM()
@@ -46130,7 +46130,7 @@ A.Tq.prototype={
 wM(){var s=0,r=A.Q(t.z),q=this,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b
 var $async$wM=A.M(function(a0,a1){if(a0===1)return A.N(a1,r)
 while(true)switch(s){case 0:s=2
-return A.T(A.a2p(A.eh("http://localhost:3000/api/zones",0,null),null),$async$wM)
+return A.T(A.a2p(A.eh("http://192.168.120.126:3000/api/zones",0,null),null),$async$wM)
 case 2:b=a1
 if(b.b===200)try{m=q.a.ax
 m.sF(0,0)
@@ -46165,7 +46165,7 @@ return A.P($async$wM,r)},
 wN(){var s=0,r=A.Q(t.z),q=this,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a
 var $async$wN=A.M(function(a1,a2){if(a1===1)return A.N(a2,r)
 while(true)switch(s){case 0:s=2
-return A.T(A.a2p(A.eh("http://localhost:3000/api/zone_events",0,null),null),$async$wN)
+return A.T(A.a2p(A.eh("http://192.168.120.126:3000/api/zone_events",0,null),null),$async$wN)
 case 2:a=a2
 if(a.b===200)try{m=q.a.ay
 m.sF(0,0)
