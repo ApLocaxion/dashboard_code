@@ -48,8 +48,8 @@ class _SearchMapViewState extends State<SearchMapView> {
           const step = 0.12;
           final zoomDelta = event.scrollDelta.dy < 0 ? (1 + step) : (1 - step);
           final newZoom = (mapController.zoom.value * zoomDelta).clamp(
-            5.0,
-            500.0,
+            1.0,
+            300.0,
           );
           final worldAtFocal = _screenToWorld(event.position);
           final newScale = Env.cfg.pxPerMeter * newZoom;
@@ -65,7 +65,7 @@ class _SearchMapViewState extends State<SearchMapView> {
           _worldAtFocalStart = _screenToWorld(_startFocal);
         },
         onScaleUpdate: (details) {
-          final newZoom = (_startZoom * details.scale).clamp(5.0, 500.0);
+          final newZoom = (_startZoom * details.scale).clamp(1.0, 300.0);
           final newScalePxPerMeter = Env.cfg.pxPerMeter * newZoom;
           final targetPan =
               details.focalPoint - _worldAtFocalStart * newScalePxPerMeter;

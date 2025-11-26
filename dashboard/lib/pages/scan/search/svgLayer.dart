@@ -51,7 +51,7 @@ class _SvgLayerState extends State<SvgLayer> {
             height: imgHeight,
             child: IgnorePointer(
               child: SvgPicture.asset(
-                'ELVAL_SVG1.svg',
+                'assets/ELVAL_SVG1.svg',
                 fit: BoxFit.contain,
 
                 // ******** SHOW LOADER WHILE SVG IS LOADING ********

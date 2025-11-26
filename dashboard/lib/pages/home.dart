@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
     ),
   ];
 
-  static const double tileSize = 100;
+  static const double tileSize = 200;
   static const double spacing = 16;
 
   @override
