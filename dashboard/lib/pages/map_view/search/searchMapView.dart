@@ -112,7 +112,7 @@ class _SearchMapViewState extends State<SearchMapView> {
             Obx(
               () => !mapController.showZone.value
                   ? const SizedBox.shrink()
-                  : ZoneLayer(
+                  : ZoneLayer2(
                       cfg: Env.cfg,
                       zoom: mapController.zoom.value,
                       panPx: mapController.panPx.value,

@@ -8,7 +8,7 @@ import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ZoneLayer extends StatefulWidget {
+class ZoneLayer2 extends StatefulWidget {
   final MapConfig cfg;
   final double zoom;
   final Offset panPx;
@@ -16,7 +16,7 @@ class ZoneLayer extends StatefulWidget {
   final double majorStepM;
   final bool showLabels;
 
-  const ZoneLayer({
+  const ZoneLayer2({
     super.key,
     required this.cfg,
     required this.zoom,
@@ -27,10 +27,10 @@ class ZoneLayer extends StatefulWidget {
   });
 
   @override
-  State<ZoneLayer> createState() => _ZoneLayerState();
+  State<ZoneLayer2> createState() => _ZoneLayer2State();
 }
 
-class _ZoneLayerState extends State<ZoneLayer> {
+class _ZoneLayer2State extends State<ZoneLayer2> {
   final zoneController = Get.find<ZoneController>(tag: 'zoneController');
   final containerController = Get.find<ContainerController>(
     tag: 'containerController',
@@ -122,7 +122,7 @@ class _ZoneLayerState extends State<ZoneLayer> {
           child: Stack(
             children: [
               CustomPaint(
-                painter: _ZoneLayer(
+                painter: _ZoneLayer2(
                   cfg: widget.cfg,
                   zoom: widget.zoom,
                   panPx: widget.panPx,
@@ -167,7 +167,7 @@ class _ZoneLayerState extends State<ZoneLayer> {
   }
 }
 
-class _ZoneLayer extends CustomPainter {
+class _ZoneLayer2 extends CustomPainter {
   final MapConfig cfg;
   final double zoom;
   final Offset panPx; // screen-space pan (pixels)
@@ -179,7 +179,7 @@ class _ZoneLayer extends CustomPainter {
   List<ZoneModel> allZone;
   final Offset Function(double xm, double ym) toScreen;
 
-  _ZoneLayer({
+  _ZoneLayer2({
     required this.cfg,
     required this.zoom,
     required this.panPx,
@@ -288,7 +288,7 @@ class _ZoneLayer extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ZoneLayer old) {
+  bool shouldRepaint(covariant _ZoneLayer2 old) {
     return old.zoom != zoom ||
         old.panPx != panPx ||
         old.minorStepM != minorStepM ||
