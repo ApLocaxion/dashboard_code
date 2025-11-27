@@ -1,23 +1,27 @@
-import 'dart:math' as math;
-import 'package:flutter/material.dart';
-
-/// Matches your areaMap config
 class MapConfig {
-  final double widthMeters;
-  final double heightMeters;
+  final double mapWidth;
+  final double mapHeight;
   final double marginMeters;
   final double pxPerMeter;
+
   const MapConfig({
-    required this.widthMeters,
-    required this.heightMeters,
+    required this.mapWidth,
+    required this.mapHeight,
     required this.marginMeters,
     required this.pxPerMeter,
   });
 
-  double get totalWidthMeters => widthMeters + 2 * marginMeters;
-  double get totalHeightMeters => heightMeters + 2 * marginMeters;
-
-  /// World origin in meters (negative margin so world coords include the margin)
-  double get originX => -marginMeters;
-  double get originY => -marginMeters;
+  MapConfig copyWith({
+    double? mapWidth,
+    double? mapHeight,
+    double? marginMeters,
+    double? pxPerMeter,
+  }) {
+    return MapConfig(
+      mapWidth: mapWidth ?? this.mapWidth,
+      mapHeight: mapHeight ?? this.mapHeight,
+      marginMeters: marginMeters ?? this.marginMeters,
+      pxPerMeter: pxPerMeter ?? this.pxPerMeter,
+    );
+  }
 }

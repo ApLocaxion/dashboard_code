@@ -76,8 +76,8 @@ class _SimulationLayer extends CustomPainter {
   // ===== Fixed world extents (meters) =====
   double get originX => -cfg.marginMeters;
   double get originY => -cfg.marginMeters;
-  double get worldWm => cfg.widthMeters + 2 * cfg.marginMeters;
-  double get worldHm => cfg.heightMeters + 2 * cfg.marginMeters;
+  double get worldWm => cfg.mapWidth + 2 * cfg.marginMeters;
+  double get worldHm => cfg.mapHeight + 2 * cfg.marginMeters;
 
   // Pixels per meter at current zoom
   double get scale => cfg.pxPerMeter * zoom;

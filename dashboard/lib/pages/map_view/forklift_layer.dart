@@ -34,8 +34,8 @@ class MarkerOverlay extends StatelessWidget {
   // ----- world extents (meters) with margins -----
   double get _originX => -cfg.marginMeters;
   double get _originY => -cfg.marginMeters;
-  double get _worldWm => cfg.widthMeters + 2 * cfg.marginMeters;
-  double get _worldHm => cfg.heightMeters + 2 * cfg.marginMeters;
+  double get _worldWm => cfg.mapWidth + 2 * cfg.marginMeters;
+  double get _worldHm => cfg.mapHeight + 2 * cfg.marginMeters;
 
   // pixels per meter at current zoom
   double get _scale => cfg.pxPerMeter * zoom;

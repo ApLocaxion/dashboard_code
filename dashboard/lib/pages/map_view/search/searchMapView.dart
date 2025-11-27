@@ -30,7 +30,8 @@ class _SearchMapViewState extends State<SearchMapView> {
   Offset _startFocal = Offset.zero;
   Offset _worldAtFocalStart = Offset.zero;
 
-  double get _scalePxPerMeter => Env.cfg.pxPerMeter * mapController.zoom.value;
+  double get _scalePxPerMeter =>
+      mapController.cfg.value.pxPerMeter * mapController.zoom.value;
 
   // Screen -> World (meters)
   Offset _screenToWorld(Offset screen) {
@@ -40,6 +41,20 @@ class _SearchMapViewState extends State<SearchMapView> {
   final webSocketController = Get.find<WebSocketController>(
     tag: 'webSocketController',
   );
+  double get _originX => mapController.cfg.value.marginMeters;
+  double get _originY => mapController.cfg.value.marginMeters;
+  double get _worldHm =>
+      mapController.cfg.value.mapHeight +
+      2 * mapController.cfg.value.marginMeters;
+  Offset _toWorld(double xPx, double yPx) {
+    final xm =
+        _originX +
+        (xPx - mapController.panPx.value.dx) / mapController.zoom.value;
+    final heightPx = _worldHm * mapController.zoom.value;
+    final yImg = heightPx - (yPx - mapController.panPx.value.dy);
+    final ym = _originY + yImg / mapController.zoom.value;
+    return Offset(xm, ym);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,89 +68,123 @@ class _SearchMapViewState extends State<SearchMapView> {
             300.0,
           );
           final worldAtFocal = _screenToWorld(event.position);
-          final newScale = Env.cfg.pxPerMeter * newZoom;
+          final newScale = mapController.cfg.value.pxPerMeter * newZoom;
           final newPan = event.position - worldAtFocal * newScale;
           mapController.zoom.value = newZoom;
           mapController.panPx.value = newPan;
         }
       },
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onScaleStart: (details) {
-          _startZoom = mapController.zoom.value;
-          _startFocal = details.focalPoint;
-          _worldAtFocalStart = _screenToWorld(_startFocal);
+      child: MouseRegion(
+        onHover: (event) {
+          //
+          Offset p = _toWorld(event.localPosition.dx, event.localPosition.dy);
+          mapController.x.value = p.dx.toPrecision(3);
+          mapController.y.value = p.dy.toPrecision(3);
         },
-        onScaleUpdate: (details) {
-          final newZoom = (_startZoom * details.scale).clamp(1.0, 300.0);
-          final newScalePxPerMeter = Env.cfg.pxPerMeter * newZoom;
-          final targetPan =
-              details.focalPoint - _worldAtFocalStart * newScalePxPerMeter;
-          mapController.panPx.value = targetPan;
-        },
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Obx(
-                () => !mapController.showGrid.value
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onScaleStart: (details) {
+            _startZoom = mapController.zoom.value;
+            _startFocal = details.focalPoint;
+            _worldAtFocalStart = _screenToWorld(_startFocal);
+          },
+          onScaleUpdate: (details) {
+            final newZoom = (_startZoom * details.scale).clamp(1.0, 300.0);
+            final newScalePxPerMeter =
+                mapController.cfg.value.pxPerMeter * newZoom;
+            final targetPan =
+                details.focalPoint - _worldAtFocalStart * newScalePxPerMeter;
+            mapController.panPx.value = targetPan;
+          },
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Obx(
+                  () => !mapController.showGrid.value
+                      ? const SizedBox.shrink()
+                      : GridLayer(
+                          cfg: mapController.cfg.value,
+                          zoom: mapController.zoom.value,
+                          panPx: mapController.panPx.value,
+                          minorStepM: 1,
+                          majorStepM: 10,
+                          showLabels: true,
+                        ),
+                ),
+              ),
+              Obx(() {
+                return Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.75),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      child: Text(
+                        "X: ${mapController.x.value}, Y: ${mapController.x.value}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+              // Positioned.fill(
+              //   child: Obx(
+              //     () => !mapController.showMap.value
+              //         ? const SizedBox.shrink()
+              //         : ImageLayer(
+              //             cfg: cfg,
+              //             zoom: mapController.zoom.value,
+              //             panPx: mapController.panPx.value,
+              //           ),
+              //   ),
+              // ),
+              Positioned.fill(
+                child: Obx(() {
+                  return SvgLayer(
+                    cfg: mapController.cfg.value,
+                    zoom: mapController.zoom.value,
+                    panPx: mapController.panPx.value,
+                  );
+                }),
+              ),
+              Obx(
+                () => !mapController.showZone.value
                     ? const SizedBox.shrink()
-                    : GridLayer(
-                        cfg: Env.cfg,
+                    : ZoneLayer2(
+                        cfg: mapController.cfg.value,
                         zoom: mapController.zoom.value,
                         panPx: mapController.panPx.value,
-                        minorStepM: 1,
-                        majorStepM: 10,
-                        showLabels: true,
                       ),
               ),
-            ),
-            // Positioned.fill(
-            //   child: Obx(
-            //     () => !mapController.showMap.value
-            //         ? const SizedBox.shrink()
-            //         : ImageLayer(
-            //             cfg: cfg,
-            //             zoom: mapController.zoom.value,
-            //             panPx: mapController.panPx.value,
-            //           ),
-            //   ),
-            // ),
-            Positioned.fill(
-              child: Obx(() {
-                return SvgLayer(
-                  cfg: Env.cfg,
-                  zoom: mapController.zoom.value,
-                  panPx: mapController.panPx.value,
-                );
-              }),
-            ),
-            Obx(
-              () => !mapController.showZone.value
-                  ? const SizedBox.shrink()
-                  : ZoneLayer2(
-                      cfg: Env.cfg,
-                      zoom: mapController.zoom.value,
-                      panPx: mapController.panPx.value,
-                    ),
-            ),
-            Positioned.fill(
-              child: Obx(() {
-                if (!mapController.showBin.value) {
-                  return SizedBox.shrink();
-                }
-                // Touch RxLists inside Obx to register dependencies
-                final bins = binController.allBin.toList();
-                final containers = containerController.containerList.toList();
-                return MarkerLayer(
-                  cfg: Env.cfg,
-                  zoom: mapController.zoom.value,
-                  bins: bins,
-                  panPx: mapController.panPx.value,
-                  containers: containers,
-                );
-              }),
-            ),
-          ],
+              Positioned.fill(
+                child: Obx(() {
+                  if (!mapController.showBin.value) {
+                    return SizedBox.shrink();
+                  }
+                  // Touch RxLists inside Obx to register dependencies
+                  final bins = binController.allBin.toList();
+                  final containers = containerController.containerList.toList();
+                  return MarkerLayer(
+                    cfg: mapController.cfg.value,
+                    zoom: mapController.zoom.value,
+                    bins: bins,
+                    panPx: mapController.panPx.value,
+                    containers: containers,
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

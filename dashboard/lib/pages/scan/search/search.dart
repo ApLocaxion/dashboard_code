@@ -144,7 +144,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                           mapController.panPx.value.dx;
                                       final yImg = (ym - origin) * z;
                                       final heightPx =
-                                          (Env.cfg.heightMeters + 2 * 20) *
+                                          (mapController.cfg.value.mapHeight +
+                                              2 * 20) *
                                           z; // width/height + margins
                                       final yPx =
                                           (heightPx - yImg) +

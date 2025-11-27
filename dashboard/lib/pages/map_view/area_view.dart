@@ -1,5 +1,6 @@
 import 'package:dashboard/controller/bin_controller.dart';
 import 'package:dashboard/controller/container_controller.dart';
+import 'package:dashboard/controller/map_controller.dart';
 import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:dashboard/pages/map_view/forklift_layer.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
@@ -23,23 +24,18 @@ class AreaMapView extends StatefulWidget {
 }
 
 class _AreaMapViewState extends State<AreaMapView> {
-  final cfg = const MapConfig(
-    widthMeters: 150,
-    heightMeters: 150,
-    marginMeters: 20,
-    pxPerMeter: 1,
-  );
   final containerController = Get.find<ContainerController>(
     tag: 'containerController',
   );
   final binController = Get.find<BinController>(tag: 'binController');
+  final mapController = Get.find<MapController>(tag: 'mapController');
 
   double _startZoom = 10.0;
   Offset _startPanPx = Offset.zero;
   Offset _startFocal = Offset.zero;
   Offset _worldAtFocalStart = Offset.zero;
 
-  double get _scalePxPerMeter => cfg.pxPerMeter * zoom;
+  double get _scalePxPerMeter => mapController.cfg.value.pxPerMeter * zoom;
 
   // Screen -> World (meters)
   Offset _screenToWorld(Offset screen) {
@@ -60,9 +56,9 @@ class _AreaMapViewState extends State<AreaMapView> {
             final zoomDelta = event.scrollDelta.dy < 0
                 ? (1 + step)
                 : (1 - step);
-            final newZoom = (zoom * zoomDelta).clamp(5.0, 500.0);
+            final newZoom = (zoom * zoomDelta).clamp(2.0, 500.0);
             final worldAtFocal = _screenToWorld(event.position);
-            final newScale = cfg.pxPerMeter * newZoom;
+            final newScale = mapController.cfg.value.pxPerMeter * newZoom;
             final newPan = event.position - worldAtFocal * newScale;
             setState(() {
               zoom = newZoom;
@@ -78,8 +74,9 @@ class _AreaMapViewState extends State<AreaMapView> {
             _worldAtFocalStart = _screenToWorld(_startFocal);
           },
           onScaleUpdate: (details) {
-            final newZoom = (_startZoom * details.scale).clamp(5.0, 500.0);
-            final newScalePxPerMeter = cfg.pxPerMeter * newZoom;
+            final newZoom = (_startZoom * details.scale).clamp(2.0, 500.0);
+            final newScalePxPerMeter =
+                mapController.cfg.value.pxPerMeter * newZoom;
             final targetPan =
                 details.focalPoint - _worldAtFocalStart * newScalePxPerMeter;
             setState(() {
@@ -90,7 +87,7 @@ class _AreaMapViewState extends State<AreaMapView> {
             children: [
               Positioned.fill(
                 child: GridLayer(
-                  cfg: cfg,
+                  cfg: mapController.cfg.value,
                   zoom: zoom,
                   panPx: panPx,
                   minorStepM: 1,
@@ -104,7 +101,7 @@ class _AreaMapViewState extends State<AreaMapView> {
                   final bins = binController.allBin.toList();
                   final containers = containerController.containerList.toList();
                   return MarkerOverlay(
-                    cfg: cfg,
+                    cfg: mapController.cfg.value,
                     zoom: zoom,
                     bins: bins,
                     panPx: panPx,
@@ -112,7 +109,7 @@ class _AreaMapViewState extends State<AreaMapView> {
                   );
                 }),
               ),
-              ZoneLayer(cfg: cfg, zoom: zoom, panPx: panPx),
+              ZoneLayer(cfg: mapController.cfg.value, zoom: zoom, panPx: panPx),
               // searchButton(context),
               Positioned(
                 top: 20,

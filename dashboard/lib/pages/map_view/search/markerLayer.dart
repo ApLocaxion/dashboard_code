@@ -42,8 +42,8 @@ class _MarkerLayerState extends State<MarkerLayer> {
   // ----- world extents (meters) with margins -----
   double get _originX => -widget.cfg.marginMeters;
   double get _originY => -widget.cfg.marginMeters;
-  double get _worldWm => widget.cfg.widthMeters + 2 * widget.cfg.marginMeters;
-  double get _worldHm => widget.cfg.heightMeters + 2 * widget.cfg.marginMeters;
+  double get _worldWm => widget.cfg.mapWidth + 2 * widget.cfg.marginMeters;
+  double get _worldHm => widget.cfg.mapHeight + 2 * widget.cfg.marginMeters;
 
   // pixels per meter at current zoom
   double get _scale => widget.cfg.pxPerMeter * widget.zoom;
@@ -94,9 +94,9 @@ class _MarkerLayerState extends State<MarkerLayer> {
         },
         child: LayoutBuilder(
           builder: (ctx, constraints) {
-            final vis = _visibleWorld(
-              Size(constraints.maxWidth, constraints.maxHeight),
-            );
+            // final vis = _visibleWorld(
+            //   Size(constraints.maxWidth, constraints.maxHeight),
+            // );
             final children = <Widget>[];
 
             // Forklifts (containers)
@@ -166,7 +166,7 @@ class _MarkerLayerState extends State<MarkerLayer> {
                   y > _originY + _worldHm) {
                 continue;
               }
-              if (!vis.contains(Offset(x, y))) continue;
+              // if (!vis.contains(Offset(x, y))) continue;
 
               final isSelected =
                   binController.selectedBin.value?.binId == b.binId;

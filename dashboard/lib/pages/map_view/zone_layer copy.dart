@@ -41,7 +41,7 @@ class _ZoneLayer2State extends State<ZoneLayer2> {
 
   double get _originX => -widget.cfg.marginMeters;
   double get _originY => -widget.cfg.marginMeters;
-  double get _worldHm => widget.cfg.heightMeters + 2 * widget.cfg.marginMeters;
+  double get _worldHm => widget.cfg.mapHeight + 2 * widget.cfg.marginMeters;
 
   Offset _toScreen(double xm, double ym) {
     final xPx = (xm - _originX) * widget.zoom + widget.panPx.dx;

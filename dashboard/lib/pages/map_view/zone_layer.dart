@@ -79,8 +79,8 @@ class _ZoneLayer extends CustomPainter {
   // ===== Fixed world extents (meters) =====
   double get originX => -cfg.marginMeters;
   double get originY => -cfg.marginMeters;
-  double get worldWm => cfg.widthMeters + 2 * cfg.marginMeters;
-  double get worldHm => cfg.heightMeters + 2 * cfg.marginMeters;
+  double get worldWm => cfg.mapWidth + 2 * cfg.marginMeters;
+  double get worldHm => cfg.mapHeight + 2 * cfg.marginMeters;
 
   // Pixels per meter at current zoom
   double get scale => cfg.pxPerMeter * zoom;
@@ -126,6 +126,48 @@ class _ZoneLayer extends CustomPainter {
           ..strokeWidth = 1.0,
       );
     }
+    final Offset origin = _toScreen(0, 0);
+    const double tick = 16.0;
+    final Path originPath = Path()
+      ..moveTo(origin.dx - tick, origin.dy)
+      ..lineTo(origin.dx + tick, origin.dy)
+      ..moveTo(origin.dx, origin.dy - tick)
+      ..lineTo(origin.dx, origin.dy + tick);
+
+    canvas.drawPath(
+      originPath,
+      Paint()
+        ..color = Colors.red
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+    final Offset origin2 = _toScreen(50, 50);
+    final Path originPath2 = Path()
+      ..moveTo(origin2.dx - tick, origin2.dy)
+      ..lineTo(origin2.dx + tick, origin2.dy)
+      ..moveTo(origin2.dx, origin2.dy - tick)
+      ..lineTo(origin2.dx, origin2.dy + tick);
+
+    canvas.drawPath(
+      originPath2,
+      Paint()
+        ..color = Colors.red
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+
+    final textPainter = TextPainter(
+      text: const TextSpan(
+        text: '0,0',
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    textPainter.paint(canvas, origin + Offset(8, -textPainter.size.height - 2));
 
     try {
       //

@@ -21,7 +21,7 @@ class _ImageLayerState extends State<ImageLayer> {
   // ----- world extents (meters) with margins -----
   double get _originX => -widget.cfg.marginMeters;
   double get _originY => -widget.cfg.marginMeters;
-  double get _worldHm => widget.cfg.heightMeters + 2 * widget.cfg.marginMeters;
+  double get _worldHm => widget.cfg.mapHeight + 2 * widget.cfg.marginMeters;
 
   // Bottom-left origin mapping (X linear, Y flipped by total world height)
   Offset _toScreen(double xm, double ym) {

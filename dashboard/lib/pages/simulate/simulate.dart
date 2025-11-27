@@ -27,10 +27,13 @@ class SimulateView extends StatefulWidget {
 }
 
 class _SimulateViewState extends State<SimulateView> {
-  final cfg = Env.cfg;
+  final mapController = Get.find<MapController>(tag: 'mapController');
+  MapConfig get cfg => mapController.cfg.value;
+
   final containerController = Get.find<ContainerController>(
     tag: 'containerController',
   );
+
   final binController = Get.find<BinController>(tag: 'binController');
 
   double _startZoom = 10.0;
@@ -53,7 +56,7 @@ class _SimulateViewState extends State<SimulateView> {
   ); // ----- world extents (meters) with margins -----
   double get _originX => -cfg.marginMeters;
   double get _originY => -cfg.marginMeters;
-  double get _worldHm => cfg.heightMeters + 2 * cfg.marginMeters;
+  double get _worldHm => cfg.mapHeight + 2 * cfg.marginMeters;
   Offset _toWorld(double xPx, double yPx) {
     final xm = _originX + (xPx - panPx.dx) / zoom;
     final heightPx = _worldHm * zoom;
@@ -75,8 +78,6 @@ class _SimulateViewState extends State<SimulateView> {
 
   bool _showVirtualKeyboard = false;
   final FocusNode _focusNode = FocusNode();
-
-  final mapController = Get.find<MapController>(tag: 'mapController');
 
   @override
   void initState() {
@@ -145,7 +146,7 @@ class _SimulateViewState extends State<SimulateView> {
             child: Obx(() {
               final _ = mapController.zoom.value;
               return SvgLayer(
-                cfg: Env.cfg,
+                cfg: mapController.cfg.value,
                 zoom: zoom,
                 panPx: panPx,
                 // zoom: mapController.zoom.value,
