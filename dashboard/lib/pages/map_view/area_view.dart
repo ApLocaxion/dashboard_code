@@ -5,6 +5,7 @@ import 'package:dashboard/pages/map_view/forklift_layer.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:dashboard/pages/map_view/search/search.dart';
+import 'package:dashboard/pages/map_view/zone_layer%20copy.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
 import 'package:dashboard/service/container_api_service.dart';
 import 'package:flutter/gestures.dart';

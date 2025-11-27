@@ -6,6 +6,7 @@ import 'package:dashboard/controller/webSocket_controller.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:dashboard/pages/map_view/search/markerLayer.dart';
+import 'package:dashboard/pages/map_view/zone_layer%20copy.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
 import 'package:dashboard/pages/scan/search/svgLayer.dart';
 import 'package:flutter/gestures.dart';
@@ -59,6 +60,7 @@ class _SearchMapViewState extends State<SearchMapView> {
         }
       },
       child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
         onScaleStart: (details) {
           _startZoom = mapController.zoom.value;
           _startFocal = details.focalPoint;

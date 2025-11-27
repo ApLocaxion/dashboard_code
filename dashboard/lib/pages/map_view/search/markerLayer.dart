@@ -136,16 +136,14 @@ class _MarkerLayerState extends State<MarkerLayer> {
                 ),
               );
 
-              // Optional label next to the marker
               if (c.slamCoreId.isNotEmpty) {
                 children.add(
                   Positioned(
                     left: p.dx - 10,
                     top: p.dy + 15,
-                    child: const IgnorePointer(
+                    child: IgnorePointer(
                       child: Text(
-                        // using c.slamCoreId
-                        '',
+                        c.slamCoreId,
                         style: TextStyle(
                           color: Color(0xFF1A1A1A),
                           fontSize: 12,
