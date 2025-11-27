@@ -9,7 +9,6 @@ import 'package:dashboard/pages/map_view/map_config.dart';
 import 'package:get/get.dart';
 
 /// show text only after certain zoom level
-
 class MarkerLayer extends StatefulWidget {
   final MapConfig cfg;
   final double zoom;
@@ -42,11 +41,8 @@ class MarkerLayer extends StatefulWidget {
 class _MarkerLayerState extends State<MarkerLayer> {
   // ----- world extents (meters) with margins -----
   double get _originX => -widget.cfg.marginMeters;
-
   double get _originY => -widget.cfg.marginMeters;
-
   double get _worldWm => widget.cfg.widthMeters + 2 * widget.cfg.marginMeters;
-
   double get _worldHm => widget.cfg.heightMeters + 2 * widget.cfg.marginMeters;
 
   // pixels per meter at current zoom
@@ -88,18 +84,13 @@ class _MarkerLayerState extends State<MarkerLayer> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      // trigger rebuild on selection change
       final _ = binController.selectedBinForDetail.value;
+
       return GestureDetector(
-        behavior: HitTestBehavior.translucent, // IMPORTANT
-        onTapDown: (_) {
-          setState(() {
-            binController.selectedBinForDetail.value = null; // Reset on any tap
-          });
-        },
-        onTap: () {
-          setState(() {
-            binController.selectedBinForDetail.value = null;
-          });
+        behavior: HitTestBehavior.translucent,
+        onTapDown: (details) {
+          _handleTap(details.localPosition);
         },
         child: LayoutBuilder(
           builder: (ctx, constraints) {
@@ -110,8 +101,8 @@ class _MarkerLayerState extends State<MarkerLayer> {
 
             // Forklifts (containers)
             for (final c in widget.containers) {
-              final x = (c.x).toDouble();
-              final y = (c.y).toDouble();
+              final x = c.x.toDouble();
+              final y = c.y.toDouble();
               if (x == 0 && y == 0) continue;
               if (x < _originX ||
                   y < _originY ||
@@ -119,6 +110,7 @@ class _MarkerLayerState extends State<MarkerLayer> {
                   y > _originY + _worldHm) {
                 continue;
               }
+              // Optionally use visibility culling:
               // if (!vis.contains(Offset(x, y))) continue;
 
               final p = _toScreen(x, y);
@@ -127,7 +119,6 @@ class _MarkerLayerState extends State<MarkerLayer> {
                   : widget.iconSize * widget.zoom;
 
               children.add(
-                // This ensures the widget center is exactly at p
                 Positioned(
                   left: p.dx - sizePx / 2,
                   top: p.dy - sizePx / 2,
@@ -135,8 +126,8 @@ class _MarkerLayerState extends State<MarkerLayer> {
                   height: 30,
                   child: RepaintBoundary(
                     child: Image(
-                      image: AssetImage('assets/fu.png'),
-                      opacity: AlwaysStoppedAnimation(1),
+                      image: const AssetImage('assets/fu.png'),
+                      opacity: const AlwaysStoppedAnimation(1),
                       color: Colors.orangeAccent,
                       fit: BoxFit.contain,
                       filterQuality: FilterQuality.low,
@@ -146,15 +137,16 @@ class _MarkerLayerState extends State<MarkerLayer> {
               );
 
               // Optional label next to the marker
-              if ((c.slamCoreId).isNotEmpty) {
+              if (c.slamCoreId.isNotEmpty) {
                 children.add(
                   Positioned(
                     left: p.dx - 10,
                     top: p.dy + 15,
-                    child: IgnorePointer(
+                    child: const IgnorePointer(
                       child: Text(
-                        c.slamCoreId,
-                        style: const TextStyle(
+                        // using c.slamCoreId
+                        '',
+                        style: TextStyle(
                           color: Color(0xFF1A1A1A),
                           fontSize: 12,
                         ),
@@ -165,12 +157,10 @@ class _MarkerLayerState extends State<MarkerLayer> {
               }
             }
 
-            /// change bin icon size * zoom
-            ///
             // Bins
             for (final b in widget.bins) {
-              final x = (b.x);
-              final y = (b.y);
+              final x = b.x;
+              final y = b.y;
               if (x == 0 && y == 0) continue;
               if (x < _originX ||
                   y < _originY ||
@@ -188,57 +178,13 @@ class _MarkerLayerState extends State<MarkerLayer> {
                   ? widget.iconSize
                   : widget.iconSize * widget.zoom;
 
-              if (binController.selectedBinForDetail.value != null) {
-                final b = binController.selectedBinForDetail.value!;
-                children.add(
-                  Positioned(
-                    right: 20,
-                    top: 10,
-                    child: SizedBox(
-                      width: 200,
-                      child: CommonUi().appCard(
-                        context: context,
-                        child: Column(
-                          children: [
-                            Text(
-                              b.binId,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Divider(),
-                            CommonUi().detailRow(
-                              "Location :",
-                              b.zoneCode != null ? "${b.zoneCode}" : "N/A",
-                              Theme.of(context).colorScheme,
-                            ),
-                            CommonUi().horizontalDivider(height: 6),
-                            CommonUi().detailRow(
-                              "Forklift :",
-                              '${b.forkliftId}',
-                              Theme.of(context).colorScheme,
-                            ),
-                            CommonUi().horizontalDivider(height: 6),
-                            CommonUi().detailRow(
-                              "Weight :",
-                              'N/A',
-                              Theme.of(context).colorScheme,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-
+              // Selection highlight
               if (isSelected) {
                 final highlightSize = sizePx * 2.5;
                 children.add(
                   Positioned(
-                    left: p.dx - highlightSize / 2 + 10,
-                    top: p.dy - highlightSize / 2 + 10,
+                    left: p.dx - highlightSize / 2 + 5,
+                    top: p.dy - highlightSize / 2 + 5,
                     width: highlightSize,
                     height: highlightSize,
                     child: IgnorePointer(
@@ -253,29 +199,22 @@ class _MarkerLayerState extends State<MarkerLayer> {
                 );
               }
 
+              // Bin icon (no GestureDetector here)
               children.add(
                 Positioned(
                   left: p.dx - sizePx / 2,
                   top: p.dy - sizePx / 2,
                   width: sizePx,
                   height: sizePx,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.inventory_2,
-                      color: b.status == 'load' ? Colors.blue : Colors.grey,
-                    ),
-                    onPressed: () {
-                      binController.selectedBin.value = b;
-                      setState(() {
-                        binController.selectedBinForDetail.value = b;
-                      });
-                    },
+                  child: Icon(
+                    Icons.inventory_2,
+                    color: b.status == 'load' ? Colors.blue : Colors.grey,
                   ),
                 ),
               );
 
-              if (b.binId.isNotEmpty) {
-                if (widget.zoom < 15) continue;
+              // Bin label (only after certain zoom level)
+              if (b.binId.isNotEmpty && widget.zoom >= 15) {
                 children.add(
                   Positioned(
                     left: p.dx - 5,
@@ -289,7 +228,6 @@ class _MarkerLayerState extends State<MarkerLayer> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            // <-- background color
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -307,10 +245,96 @@ class _MarkerLayerState extends State<MarkerLayer> {
               }
             }
 
+            // Side detail card (only once, not inside the loop)
+            final selectedDetail = binController.selectedBinForDetail.value;
+            if (selectedDetail != null) {
+              children.add(
+                Positioned(
+                  right: 20,
+                  top: 10,
+                  child: SizedBox(
+                    width: 200,
+                    child: CommonUi().appCard(
+                      context: context,
+                      child: Column(
+                        children: [
+                          Text(
+                            selectedDetail.binId,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const Divider(),
+                          CommonUi().detailRow(
+                            "Location :",
+                            selectedDetail.zoneCode != null
+                                ? "${selectedDetail.zoneCode}"
+                                : "N/A",
+                            Theme.of(context).colorScheme,
+                          ),
+                          CommonUi().horizontalDivider(height: 6),
+                          CommonUi().detailRow(
+                            "Forklift :",
+                            '${selectedDetail.forkliftId}',
+                            Theme.of(context).colorScheme,
+                          ),
+                          CommonUi().horizontalDivider(height: 6),
+                          CommonUi().detailRow(
+                            "Weight :",
+                            'N/A',
+                            Theme.of(context).colorScheme,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
             return Stack(clipBehavior: Clip.none, children: children);
           },
         ),
       );
     });
+  }
+
+  /// Single tap handler for the entire layer.
+  /// Finds the closest bin to the tap in screen space and selects it.
+  void _handleTap(Offset localPos) {
+    const hitRadiusPx = 20.0; // tap radius around icon center
+
+    BinModel? hitBin;
+    double bestDist2 = hitRadiusPx * hitRadiusPx;
+
+    for (final b in widget.bins) {
+      final x = b.x;
+      final y = b.y;
+      if (x == 0 && y == 0) continue;
+
+      final screenPos = _toScreen(x, y);
+
+      final dx = screenPos.dx - localPos.dx;
+      final dy = screenPos.dy - localPos.dy;
+      final d2 = dx * dx + dy * dy;
+
+      if (d2 <= bestDist2) {
+        bestDist2 = d2;
+        hitBin = b;
+      }
+    }
+
+    if (hitBin == null) {
+      // Tap missed all bins → clear selection
+      binController.selectedBin.value = null;
+      binController.selectedBinForDetail.value = null;
+    } else {
+      // Tap hit a bin → select it
+      binController.selectedBin.value = hitBin;
+      binController.selectedBinForDetail.value = hitBin;
+    }
+
+    setState(() {});
   }
 }

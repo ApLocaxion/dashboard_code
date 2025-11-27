@@ -306,6 +306,7 @@ class _ScanPageState extends State<ScanPage> {
                           label: 'YES',
                           color: Theme.of(context).colorScheme.primary,
                           onTap: () async {
+                            ///
                             homePageController.scan.value = false;
                             // homePageController.manualEntry.value = false;
                             _controller.clear();

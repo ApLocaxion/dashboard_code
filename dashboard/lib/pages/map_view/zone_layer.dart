@@ -150,7 +150,7 @@ class _ZoneLayer extends CustomPainter {
         canvas.drawPath(
           path,
           Paint()
-            ..color = const ui.Color.fromARGB(255, 6, 75, 133)
+            ..color = const ui.Color.fromARGB(255, 182, 11, 63)
             ..style = PaintingStyle
                 .stroke // Or PaintingStyle.fill for a filled pentagon
             ..strokeWidth = 3.0,
