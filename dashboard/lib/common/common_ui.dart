@@ -151,7 +151,7 @@ class CommonUi {
 
           const SizedBox(width: 20),
           Text(
-            'ScrapView™',
+            'ScrapView+™',
             style: TextStyle(
               fontSize: size / 44,
               fontWeight: FontWeight.w500,

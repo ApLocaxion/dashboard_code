@@ -216,6 +216,49 @@ class _ZoneLayer extends CustomPainter {
           ..strokeWidth = 1.0,
       );
     }
+    // Mark the world origin with a small cross and label so the zero point is easy to spot.
+    final Offset origin = toScreen(0, 0);
+    const double tick = 16.0;
+    final Path originPath = Path()
+      ..moveTo(origin.dx - tick, origin.dy)
+      ..lineTo(origin.dx + tick, origin.dy)
+      ..moveTo(origin.dx, origin.dy - tick)
+      ..lineTo(origin.dx, origin.dy + tick);
+
+    canvas.drawPath(
+      originPath,
+      Paint()
+        ..color = Colors.red
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+    final Offset origin2 = toScreen(50, 50);
+    final Path originPath2 = Path()
+      ..moveTo(origin2.dx - tick, origin2.dy)
+      ..lineTo(origin2.dx + tick, origin2.dy)
+      ..moveTo(origin2.dx, origin2.dy - tick)
+      ..lineTo(origin2.dx, origin2.dy + tick);
+
+    canvas.drawPath(
+      originPath2,
+      Paint()
+        ..color = Colors.red
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+
+    final textPainter = TextPainter(
+      text: const TextSpan(
+        text: '0,0',
+        style: TextStyle(
+          color: Colors.red,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    textPainter.paint(canvas, origin + Offset(8, -textPainter.size.height - 2));
 
     try {
       for (int z = 0; z < allZone.length; z++) {

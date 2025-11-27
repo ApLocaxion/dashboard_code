@@ -133,25 +133,6 @@
     "updatedAt": "2025-11-26T09:12:19.004Z"
   },
   {
-    "binId": "BIN-408",
-    "status": "unload",
-    "forkliftId": null,
-    "zoneCode": "INNER",
-    "alloy": "5083",
-    "weightLbs": 0,
-    "dwellTime": "4h 50m",
-    "origin": "Scrap Yard",
-    "capacityLbs": 3000,
-    "position": {
-      "x": 11.2,
-      "y": 4.5,
-      "z": 1.1,
-      "timestamp": "2025-11-26T09:10:25.102Z"
-    },
-    "createdAt": "2025-11-26T09:11:00.000Z",
-    "updatedAt": "2025-11-26T09:12:19.004Z"
-  },
-  {
     "binId": "BIN-409",
     "status": "unload",
     "forkliftId": null,
