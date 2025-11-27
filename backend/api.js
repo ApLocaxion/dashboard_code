@@ -1,12 +1,48 @@
 const express = require("express");
 const cors = require("cors");
-const { checkZones, simulate, broadcast } = require("./ws_com");
+const fs = require("fs");
+const path = require("path");
+const { checkZones, simulate, broadcast, refreshZones } = require("./ws_com");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 let db;
+const MAP_CONFIG_FILE = path.join(__dirname, "map_config.json");
+
+function loadMapConfig() {
+  try {
+    if (fs.existsSync(MAP_CONFIG_FILE)) {
+      const raw = fs.readFileSync(MAP_CONFIG_FILE, "utf8");
+      const parsed = JSON.parse(raw);
+      return {
+        pxPerMeter: Number(parsed.pxPerMeter) || 5.7,
+        mapWidth: Number(parsed.mapWidth) || 279,
+        mapHeight: Number(parsed.mapHeight) || 288,
+        marginMeters: Number(parsed.marginMeters) || 20,
+      };
+    }
+  } catch (err) {
+    console.warn("Could not read map_config.json, using defaults:", err.message);
+  }
+  return {
+    pxPerMeter: 5.7,
+    mapWidth: 279,
+    mapHeight: 288,
+    marginMeters: 20,
+  };
+}
+
+function persistMapConfig(cfg) {
+  try {
+    fs.writeFileSync(MAP_CONFIG_FILE, JSON.stringify(cfg, null, 2));
+  } catch (err) {
+    console.warn("Could not persist map_config.json:", err.message);
+  }
+}
+
+let mapConfig = loadMapConfig();
 
 /* ---------------------- INDEX INITIALIZATION ---------------------- */
 async function ensureIndexes(db) {
@@ -152,6 +188,56 @@ app.get("/api/bins", async (req, res) => {
   }
 });
 
+/**
+ * GET map config (pxPerMeter, dimensions)
+ */
+app.get("/api/map_config", async (_req, res) => {
+  try {
+    res.json(mapConfig);
+  } catch (err) {
+    console.error("Error reading map config:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * POST map config (supports pxPerMeter, mapWidth, mapHeight, marginMeters)
+ */
+app.post("/api/map_config", async (req, res) => {
+  try {
+    const { pxPerMeter, mapWidth, mapHeight, marginMeters } = req.body || {};
+    if (
+      pxPerMeter === undefined &&
+      mapWidth === undefined &&
+      mapHeight === undefined &&
+      marginMeters === undefined
+    ) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+
+    const updated = { ...mapConfig };
+    const setNumber = (key, value) => {
+      const n = Number(value);
+      if (Number.isFinite(n) && n > 0) {
+        updated[key] = n;
+      }
+    };
+
+    setNumber("pxPerMeter", pxPerMeter);
+    setNumber("mapWidth", mapWidth);
+    setNumber("mapHeight", mapHeight);
+    setNumber("marginMeters", marginMeters);
+
+    mapConfig = updated;
+    persistMapConfig(mapConfig);
+
+    res.status(200).json(mapConfig);
+  } catch (err) {
+    console.error("Error updating map config:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/zones", async (req, res) => {
   try {
     const zones = await db.collection("zones").find({}).toArray();
@@ -180,6 +266,74 @@ app.get("/api/zones", async (req, res) => {
     res.json(formatted);
   } catch (err) {
     console.error("❌ Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
+ * POST /api/zones - create or update a zone
+ */
+app.post("/api/zones", async (req, res) => {
+  try {
+    const {
+      zoneId,
+      code,
+      hasChild = false,
+      chlidId = [],
+      active = true,
+      title = "",
+      description = "",
+      boundary,
+      zmax = 100,
+      zmin = -1,
+    } = req.body || {};
+
+    if (!code || !boundary) {
+      return res.status(400).json({ error: "code and boundary are required" });
+    }
+
+    const sanitized = {
+      zoneId: Number.isFinite(Number(zoneId)) ? Number(zoneId) : Date.now(),
+      code: String(code).trim(),
+      hasChild: Boolean(hasChild),
+      chlidId: Array.isArray(chlidId) ? chlidId : [],
+      active: Boolean(active),
+      title: title || String(code).trim(),
+      description: description || "",
+      boundary: String(boundary),
+      zmax: Number(zmax),
+      zmin: Number(zmin),
+    };
+
+    await db.collection("zones").updateOne(
+      { code: sanitized.code },
+      { $set: sanitized },
+      { upsert: true }
+    );
+
+    await refreshZones();
+
+    try {
+      const zonesFile = path.join(__dirname, "zones.json");
+      let fileZones = [];
+      if (fs.existsSync(zonesFile)) {
+        fileZones = JSON.parse(fs.readFileSync(zonesFile, "utf8"));
+        if (!Array.isArray(fileZones)) fileZones = [];
+      }
+      const idx = fileZones.findIndex((z) => z.code === sanitized.code);
+      if (idx >= 0) {
+        fileZones[idx] = { ...fileZones[idx], ...sanitized };
+      } else {
+        fileZones.push(sanitized);
+      }
+      fs.writeFileSync(zonesFile, JSON.stringify(fileZones, null, 2));
+    } catch (fileErr) {
+      console.warn("Could not persist to zones.json:", fileErr.message);
+    }
+
+    res.status(201).json({ message: "zone saved", zone: sanitized });
+  } catch (err) {
+    console.error("�?O Error:", err);
     res.status(500).json({ error: err.message });
   }
 });

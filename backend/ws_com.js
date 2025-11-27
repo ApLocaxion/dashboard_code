@@ -405,6 +405,12 @@ function startSocket() {
   socket.onclose = (e) => console.log("Disconnected from device:", e.reason);
 }
 
+async function refreshZones() {
+  if (!db) return;
+  zones = await db.collection("zones").find({ active: true }).toArray();
+  console.log(`Reloaded ${zones.length} active zones`);
+}
+
 /* ---------------------- EXPORT ENTRY ---------------------- */
 async function init(externalDB) {
   await connectDB(externalDB);
@@ -414,4 +420,4 @@ async function init(externalDB) {
   console.log("System ready to receive pose data from device");
 }
 
-module.exports = { init, checkZones, simulate, broadcast };
+module.exports = { init, checkZones, simulate, broadcast, refreshZones };

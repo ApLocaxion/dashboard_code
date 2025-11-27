@@ -41,8 +41,8 @@ class _SearchMapViewState extends State<SearchMapView> {
   final webSocketController = Get.find<WebSocketController>(
     tag: 'webSocketController',
   );
-  double get _originX => mapController.cfg.value.marginMeters;
-  double get _originY => mapController.cfg.value.marginMeters;
+  double get _originX => -mapController.cfg.value.marginMeters;
+  double get _originY => -mapController.cfg.value.marginMeters;
   double get _worldHm =>
       mapController.cfg.value.mapHeight +
       2 * mapController.cfg.value.marginMeters;
