@@ -313,24 +313,6 @@ app.post("/api/zones", async (req, res) => {
 
     await refreshZones();
 
-    try {
-      const zonesFile = path.join(__dirname, "zones.json");
-      let fileZones = [];
-      if (fs.existsSync(zonesFile)) {
-        fileZones = JSON.parse(fs.readFileSync(zonesFile, "utf8"));
-        if (!Array.isArray(fileZones)) fileZones = [];
-      }
-      const idx = fileZones.findIndex((z) => z.code === sanitized.code);
-      if (idx >= 0) {
-        fileZones[idx] = { ...fileZones[idx], ...sanitized };
-      } else {
-        fileZones.push(sanitized);
-      }
-      fs.writeFileSync(zonesFile, JSON.stringify(fileZones, null, 2));
-    } catch (fileErr) {
-      console.warn("Could not persist to zones.json:", fileErr.message);
-    }
-
     res.status(201).json({ message: "zone saved", zone: sanitized });
   } catch (err) {
     console.error("�?O Error:", err);

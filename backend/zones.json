@@ -2,89 +2,12 @@
   {
     "zoneId": 10,
     "code": "PLANT",
-    "hasChild": true,
-    "chlidId": [
-      11,
-      1764271690131,
-      1764271710995,
-      1764271739648,
-      1764271752822,
-      1764271761961,
-      1764272911280,
-      1764272930242,
-      1764272945391,
-      1764272956158,
-      1764272964180
-    ],
+    "hasChild": false,
+    "chlidId": [],
     "active": true,
     "title": "Plant",
     "description": "Full plant boundary",
     "boundary": "POLYGON ((1.8 275.7, 1.8 7.2, 273.3 7.2, 273.3 275.7, 1.8 275.7))",
-    "zmax": 100,
-    "zmin": -1
-  },
-  {
-    "zoneId": 1764272911280,
-    "code": "td-9",
-    "hasChild": false,
-    "chlidId": [],
-    "active": true,
-    "title": "td-9",
-    "description": "Zone td-9",
-    "boundary": "POLYGON ((210.9 255.8, 210.9 262.9, 230.4 262.9, 230.4 255.8, 210.9 255.8))",
-    "zmax": 100,
-    "zmin": -1
-  },
-  {
-    "zoneId": 1764272930242,
-    "code": "td-10",
-    "hasChild": false,
-    "chlidId": [],
-    "active": true,
-    "title": "td-10",
-    "description": "Zone td-10",
-    "boundary": "POLYGON ((210.5 248.9, 210.5 255.3, 230.4 255.3, 230.4 248.9, 210.5 248.9))",
-    "zmax": 100,
-    "zmin": -1
-  },
-  {
-    "zoneId": 1764272945391,
-    "code": "11",
-    "hasChild": true,
-    "chlidId": [
-      1764272956158,
-      1764272964180
-    ],
-    "active": true,
-    "title": "11",
-    "description": "Zone 11",
-    "boundary": "POLYGON ((175.0 240.2, 175.0 264.6, 200.0 264.6, 200.0 240.2, 175.0 240.2))",
-    "zmax": 100,
-    "zmin": -1
-  },
-  {
-    "zoneId": 1764272956158,
-    "code": "33",
-    "hasChild": false,
-    "chlidId": [],
-    "active": true,
-    "title": "33",
-    "description": "Zone 33",
-    "boundary": "POLYGON ((184.9 249.3, 184.9 253.5, 186.8 253.5, 186.8 249.3, 184.9 249.3))",
-    "zmax": 100,
-    "zmin": -1
-  },
-  {
-    "zoneId": 1764272964180,
-    "code": "22",
-    "hasChild": true,
-    "chlidId": [
-      1764272956158
-    ],
-    "active": true,
-    "title": "22",
-    "description": "Zone 22",
-    "boundary": "POLYGON ((178.4 246.8, 178.4 260.9, 189.5 260.9, 189.5 246.8, 178.4 246.8))",
     "zmax": 100,
     "zmin": -1
   }
