@@ -40,7 +40,9 @@ class _SvgLayerState extends State<SvgLayer> {
   final mapController = Get.find<MapController>(tag: 'mapController');
 
   Future getSvgIntrinsicSize() async {
-    final svgString = await rootBundle.loadString('assets/ELVAL_SVG1.svg');
+    final svgString = await rootBundle.loadString(
+      'assets/ELVAL_SVG1-NOWHITESPACE2.svg',
+    );
     final doc = XmlDocument.parse(svgString);
     final svgElem = doc.rootElement;
 
@@ -83,8 +85,8 @@ class _SvgLayerState extends State<SvgLayer> {
             height: imgHeight,
             child: IgnorePointer(
               child: SvgPicture.asset(
-                'assets/ec.svg',
-                // 'assets/ELVAL_SVG1.svg',
+                'assets/ELVAL_SVG1-NOWHITESPACE2.svg',
+                // 'assets/ELVAL_SVG1-NOWHITESPACE2.svg',
                 fit: BoxFit.contain,
                 alignment: AlignmentGeometry.bottomLeft,
 

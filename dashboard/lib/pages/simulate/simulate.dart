@@ -272,9 +272,9 @@ class _SimulateViewState extends State<SimulateView> {
   void initState() {
     containerController.showTrajector.value = false;
     _pxPerMeterController.text = mapController.cfg.value.pxPerMeter
-        .toStringAsFixed(2);
+        .toStringAsFixed(4);
     _mapCfgWorker = ever<MapConfig>(mapController.cfg, (config) {
-      _pxPerMeterController.text = config.pxPerMeter.toStringAsFixed(2);
+      _pxPerMeterController.text = config.pxPerMeter.toStringAsFixed(4);
       setState(() {});
     });
     super.initState();
@@ -555,7 +555,7 @@ class _SimulateViewState extends State<SimulateView> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            'Current: ${cfg.pxPerMeter.toStringAsFixed(2)} px/m',
+                            'Current: ${cfg.pxPerMeter.toStringAsFixed(4)} px/m',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey.shade700,

@@ -24,6 +24,11 @@ class _HomeState extends State<Home> {
       icon: Icons.dashboard_customize_rounded,
       route: '/dashboard',
     ),
+    _HomeTile(
+      label: 'Advance',
+      icon: Icons.receipt_long_sharp,
+      route: '/advance',
+    ),
   ];
 
   static const double tileSize = 200;

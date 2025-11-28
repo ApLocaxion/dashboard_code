@@ -65,7 +65,7 @@ class _SearchMapViewState extends State<SearchMapView> {
           final zoomDelta = event.scrollDelta.dy < 0 ? (1 + step) : (1 - step);
           final newZoom = (mapController.zoom.value * zoomDelta).clamp(
             1.0,
-            300.0,
+            1500.0,
           );
           final worldAtFocal = _screenToWorld(event.position);
           final newScale = mapController.cfg.value.pxPerMeter * newZoom;
@@ -78,8 +78,8 @@ class _SearchMapViewState extends State<SearchMapView> {
         onHover: (event) {
           //
           Offset p = _toWorld(event.localPosition.dx, event.localPosition.dy);
-          mapController.x.value = p.dx.toPrecision(3);
-          mapController.y.value = p.dy.toPrecision(3);
+          mapController.x.value = p.dx.toPrecision(4);
+          mapController.y.value = p.dy.toPrecision(4);
         },
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
@@ -89,7 +89,7 @@ class _SearchMapViewState extends State<SearchMapView> {
             _worldAtFocalStart = _screenToWorld(_startFocal);
           },
           onScaleUpdate: (details) {
-            final newZoom = (_startZoom * details.scale).clamp(1.0, 300.0);
+            final newZoom = (_startZoom * details.scale).clamp(1.0, 1500.0);
             final newScalePxPerMeter =
                 mapController.cfg.value.pxPerMeter * newZoom;
             final targetPan =

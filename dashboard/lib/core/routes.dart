@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dashboard/pages/dashboard/dashboard.dart';
+import 'package:dashboard/advance.dart';
 import 'package:dashboard/pages/home.dart';
 import 'package:dashboard/pages/map_view/area_view.dart';
 import 'package:dashboard/pages/scan/loaded_view.dart';
@@ -18,6 +18,7 @@ appRoutes() => [
   GetPage(name: "/dashboard", page: () => const TableWid()),
   GetPage(name: "/searchScreen", page: () => const SearchScreen()),
   GetPage(name: "/load", page: () => const LoadedView()),
+  GetPage(name: "/advance", page: () => const ScrapViewApp()),
   // GetPage(
   //   name: '/editDeviceDetails',
   //   page: () => EditDeviceDetailsPage(mode: '', title: ''),

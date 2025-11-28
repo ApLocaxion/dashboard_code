@@ -16,9 +16,9 @@ class MapController {
 
   /// Make cfg reactive
   Rx<MapConfig> cfg = MapConfig(
-    mapWidth: 279,
-    mapHeight: 288,
+    mapWidth: 280.1199,
+    mapHeight: 297.59581,
     marginMeters: 20,
-    pxPerMeter: 5.7,
+    pxPerMeter: 5.669,
   ).obs;
 }
