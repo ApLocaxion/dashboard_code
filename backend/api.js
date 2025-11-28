@@ -4,6 +4,56 @@ const fs = require("fs");
 const path = require("path");
 const { checkZones, simulate, broadcast, refreshZones } = require("./ws_com");
 
+// Parse WKT polygon string -> [{ x, y }, ...]
+function parsePolygonWkt(wkt) {
+  if (!wkt || typeof wkt !== "string") return null;
+  const match = wkt.match(/\(\(([^)]+)\)\)/);
+  if (!match) return null;
+  try {
+    return match[1]
+      .trim()
+      .split(",")
+      .map((pair) => {
+        const [x, y] = pair.trim().split(/\s+/).map(Number);
+        return { x, y };
+      })
+      .filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y));
+  } catch (err) {
+    console.warn("Failed to parse polygon WKT:", err.message);
+    return null;
+  }
+}
+
+// Format [{ x, y }, ...] -> "POLYGON ((x y, ...))" keeping numeric string style
+function formatPolygonWkt(points) {
+  if (!points || !points.length) return "";
+  const fmt = (n) => Number.isFinite(n) ? Number(n.toFixed(4)).toString() : "0";
+  const closed = [...points];
+  const first = points[0];
+  const last = points[points.length - 1];
+  if (first.x !== last.x || first.y !== last.y) {
+    closed.push({ x: first.x, y: first.y });
+  }
+  const body = closed.map((p) => `${fmt(p.x)} ${fmt(p.y)}`).join(", ");
+  return `POLYGON ((${body}))`;
+}
+
+async function rescaleZones(oldPxPerMeter, newPxPerMeter) {
+  if (!db) return;
+  const factor = oldPxPerMeter / newPxPerMeter;
+  if (!Number.isFinite(factor) || factor === 1) return;
+
+  const zones = await db.collection("zones").find({ boundary: { $exists: true } }).toArray();
+  for (const z of zones) {
+    const pts = parsePolygonWkt(z.boundary);
+    if (!pts || !pts.length) continue;
+    const scaled = pts.map((p) => ({ x: p.x * factor, y: p.y * factor }));
+    const wkt = formatPolygonWkt(scaled);
+    await db.collection("zones").updateOne({ _id: z._id }, { $set: { boundary: wkt } });
+  }
+  await refreshZones();
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -206,6 +256,7 @@ app.get("/api/map_config", async (_req, res) => {
 app.post("/api/map_config", async (req, res) => {
   try {
     const { pxPerMeter, mapWidth, mapHeight, marginMeters } = req.body || {};
+    const oldPxPerMeter = mapConfig.pxPerMeter;
     if (
       pxPerMeter === undefined &&
       mapWidth === undefined &&
@@ -229,6 +280,20 @@ app.post("/api/map_config", async (req, res) => {
     setNumber("marginMeters", marginMeters);
 
     mapConfig = updated;
+
+    // If pxPerMeter changed, rescale existing zone coordinates to keep alignment
+    if (
+      Number.isFinite(oldPxPerMeter) &&
+      Number.isFinite(mapConfig.pxPerMeter) &&
+      oldPxPerMeter !== mapConfig.pxPerMeter
+    ) {
+      try {
+        await rescaleZones(oldPxPerMeter, mapConfig.pxPerMeter);
+      } catch (err) {
+        console.error("Error rescaling zones after pxPerMeter change:", err);
+      }
+    }
+
     persistMapConfig(mapConfig);
 
     res.status(200).json(mapConfig);
