@@ -25,13 +25,15 @@ docker compose build --no-cache
 if errorlevel 1 goto :fail
 
 echo.
-set STEP=docker compose up
+set STEP=docker compose up -d
 echo Running !STEP!
-docker compose up
+docker compose up -d
 if errorlevel 1 goto :fail
 
 echo.
 echo SUCCESS: stack is up.
+REM Open browser to http://localhost:8080
+start "" "http://localhost:8080"
 exit /b 0
 
 :fail
