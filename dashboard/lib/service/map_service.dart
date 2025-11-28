@@ -18,8 +18,10 @@ class MapService {
         final data = jsonDecode(response.body);
         _applyConfig(data);
       } else {
-        CommonWidgets()
-            .errorSnackbar('Error', 'Unable to fetch map config from server');
+        CommonWidgets().errorSnackbar(
+          'Error',
+          'Unable to fetch map config from server',
+        );
       }
     } catch (e) {
       CommonWidgets().errorSnackbar('Error', 'Unable to fetch map config');
@@ -53,19 +55,26 @@ class MapService {
 
   void _applyConfig(Map<String, dynamic> json) {
     final current = mapController.cfg.value;
-    final updated = MapConfig(
-      mapWidth: _asDouble(json['mapWidth'], current.mapWidth),
-      mapHeight: _asDouble(json['mapHeight'], current.mapHeight),
-      marginMeters: _asDouble(json['marginMeters'], current.marginMeters),
-      pxPerMeter: _asDouble(json['pxPerMeter'], current.pxPerMeter),
+
+    final double newPxPerMeter =
+        (json['pxPerMeter'] as num?)?.toDouble() ?? current.pxPerMeter;
+
+    // Keep the physical map size (meters) in sync with the new scale so
+    // the SVG and layers resize immediately when pxPerMeter changes.
+    double newMapWidth = current.mapWidth;
+    double newMapHeight = current.mapHeight;
+    if (current.pxPerMeter > 0 && newPxPerMeter > 0) {
+      final scale = current.pxPerMeter / newPxPerMeter;
+      newMapWidth = current.mapWidth * scale;
+      newMapHeight = current.mapHeight * scale;
+    }
+
+    MapConfig updated = current.copyWith(
+      pxPerMeter: newPxPerMeter,
+      mapWidth: newMapWidth,
+      mapHeight: newMapHeight,
     );
     mapController.cfg.value = updated;
     mapController.cfg.refresh();
-  }
-
-  double _asDouble(dynamic value, double fallback) {
-    if (value == null) return fallback;
-    if (value is num) return value.toDouble();
-    return double.tryParse(value.toString()) ?? fallback;
   }
 }

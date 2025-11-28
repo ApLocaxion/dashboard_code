@@ -11,7 +11,6 @@ import 'package:dashboard/models/zone_model.dart';
 import 'package:dashboard/pages/map_view/forklift_layer.dart';
 import 'package:dashboard/pages/map_view/grid_view.dart';
 import 'package:dashboard/pages/map_view/map_config.dart';
-import 'package:dashboard/pages/map_view/zone_layer%20copy.dart';
 import 'package:dashboard/pages/map_view/zone_layer.dart';
 import 'package:dashboard/pages/scan/search/svgLayer.dart';
 import 'package:dashboard/pages/simulate/darw_simulate.dart';
@@ -149,8 +148,9 @@ class _SimulateViewState extends State<SimulateView> {
       if (zone.zoneId == newZoneId) continue;
       final boundaryOffsets = _mapBoundaryToOffsets(zone.boundary);
       if (boundaryOffsets.length < 3) continue;
-      final isInside =
-          boundaryOffsets.every((p) => _isPointInsidePolygon(p, newBoundary));
+      final isInside = boundaryOffsets.every(
+        (p) => _isPointInsidePolygon(p, newBoundary),
+      );
       if (isInside) {
         children.add(zone);
       }
@@ -258,9 +258,11 @@ class _SimulateViewState extends State<SimulateView> {
     final success = await MapService().updatePxPerMeter(parsed);
     if (!success) {
       setState(() => _isUpdatingPx = false);
+
       return;
     }
     setState(() => _isUpdatingPx = false);
+    ZoneService().getAllZone();
   }
 
   bool _showVirtualKeyboard = false;
@@ -360,6 +362,7 @@ class _SimulateViewState extends State<SimulateView> {
             Positioned.fill(
               child: Obx(() {
                 final _ = mapController.zoom.value;
+                final __ = mapController.cfg.value;
                 return SvgLayer(
                   cfg: mapController.cfg.value,
                   zoom: zoom,
@@ -383,7 +386,14 @@ class _SimulateViewState extends State<SimulateView> {
                 );
               }),
             ),
-            ZoneLayer(cfg: cfg, zoom: zoom, panPx: mapController.panPx.value),
+            Obx(() {
+              final _ = zoneController.allZone;
+              return ZoneLayer(
+                cfg: cfg,
+                zoom: zoom,
+                panPx: mapController.panPx.value,
+              );
+            }),
             SimulationLayer(
               cfg: cfg,
               zoom: zoom,

@@ -127,7 +127,7 @@ class _SearchMapViewState extends State<SearchMapView> {
                         vertical: 4,
                       ),
                       child: Text(
-                        "X: ${mapController.x.value}, Y: ${mapController.x.value}",
+                        "X: ${mapController.x.value}, Y: ${mapController.y.value}",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
